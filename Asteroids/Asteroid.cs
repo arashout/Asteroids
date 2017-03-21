@@ -25,7 +25,7 @@ namespace Asteroids
             window.Draw(shape);
         }
 
-        public override bool entityCollision(Entity e)
+        public override bool hasCollided(Entity e)
         {
             throw new NotImplementedException();
         }
@@ -37,7 +37,7 @@ namespace Asteroids
             shape.Position = p;
         }
 
-        public override bool wallCollision(RenderWindow window)
+        public override bool isOutsideBoundaries(RenderWindow window)
         {
             throw new NotImplementedException();
         }

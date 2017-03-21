@@ -6,16 +6,15 @@ using SFML.Graphics;
 
 namespace Asteroids
 {
+    /// <summary>
+    /// Class for the ship that the player will be controlling.
+    /// All ships are initialized with zero velocity
+    /// Args:
+    ///     p(Vector2f) : the position that the ship is starting at
+    ///     sideLength(float) : The side length of the triangle that makes up the ship
+    /// </summary> 
     class Ship : Entity
     {
-        /// <summary>
-        /// Class for the ship that the player will be controlling.
-        /// All ships are initialized with zero velocity
-        /// Args:
-        ///     p(Vector2f) : the position that the ship is starting at
-        ///     sideLength(float) : The side length of the triangle that makes up the ship
-        /// </summary> 
-
         // Has the user rotated or thrust recently
         private bool hasThrust = false;
         private bool hasSpin = false;
@@ -53,7 +52,7 @@ namespace Asteroids
             window.Draw(shape);
         }
 
-        public override bool entityCollision(Entity e)
+        public override bool hasCollided(Entity e)
         {
             throw new NotImplementedException();
         }
@@ -74,6 +73,14 @@ namespace Asteroids
             else if (Keyboard.IsKeyPressed(Keyboard.Key.Left)) Rotate(-1);
             Kinematics(dt);
         }
+        /// <summary>
+        /// Applies a thrust in the direction that the ship
+        /// is currently facing, forward and backward depends on the
+        /// direction parameter
+        /// </summary>
+        /// <param name="direction">
+        /// Dictates whether the ship moves backward or forward 
+        /// </param>
         public void Thrust(sbyte direction)
         {
             
@@ -100,14 +107,15 @@ namespace Asteroids
             shape.Position = position;
             shape.Rotation = heading;
 
-            // Decaying Velocities
+            // Decaying Velocities, if the user hasn't recently
+            // pressed down the thrust or spin keys then reduce speed
             if (!hasThrust) velocity = velocity * decayRate;
             if (!hasSpin) angularVelocity = angularVelocity * decayRate;
 
             hasThrust = false;
             hasSpin = false;
         }
-        public override bool wallCollision(RenderWindow window)
+        public override bool isOutsideBoundaries(RenderWindow window)
         {
             throw new NotImplementedException();
         }

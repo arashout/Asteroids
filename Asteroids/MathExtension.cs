@@ -3,7 +3,7 @@ using SFML.System;
 
 namespace Asteroids
 {
-    public static class Helper
+    public static class MathExtension
     {
         public static float degToRads(this float deg)
         {

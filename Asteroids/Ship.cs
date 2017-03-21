@@ -52,10 +52,16 @@ namespace Asteroids
             window.Draw(shape);
         }
 
-        public override bool hasCollided(Entity e)
+        /// <summary>
+        /// Checks if the ship has collided with a given asteroid "a"
+        /// </summary>
+        /// <param name="a">an asteroid</param>
+        /// <returns></returns>
+        public bool HasCollided(Asteroid a)
         {
-            throw new NotImplementedException();
+            return true;
         }
+        
 
         /// <summary>
         /// The ship update function applies thrust & rotation if applicable
@@ -114,10 +120,6 @@ namespace Asteroids
 
             hasThrust = false;
             hasSpin = false;
-        }
-        public override bool isOutsideBoundaries(RenderWindow window)
-        {
-            throw new NotImplementedException();
         }
     }
 }

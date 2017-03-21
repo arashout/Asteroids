@@ -14,7 +14,5 @@ namespace Asteroids
 
         abstract public void Draw(RenderWindow window);
         abstract public void Update(float dt);
-        abstract public bool isOutsideBoundaries(RenderWindow window);
-        abstract public bool hasCollided(Entity e);
     }
 }

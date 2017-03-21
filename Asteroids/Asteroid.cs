@@ -8,12 +8,14 @@ namespace Asteroids
     class Asteroid : Entity
     {
         private float radius;
-        private float speed = 10;
+        private const float unscaledSpeed = 25;
+        private float scaledSpeed;
 
-        public Asteroid(Vector2f p, uint r = 100)
+        public Asteroid(Vector2f p, Vector2f v, uint r = 25)
         {
             // Asteroid default
             radius = r;
+            scaledSpeed = unscaledSpeed / r;
             shape = new CircleShape(radius);
             Vector2f o = new Vector2f(radius, radius);
 
@@ -25,21 +27,16 @@ namespace Asteroids
             window.Draw(shape);
         }
 
-        public override bool hasCollided(Entity e)
-        {
-            throw new NotImplementedException();
-        }
-
         public override void Update(float dt)
         {
-            Vector2f p = new Vector2f(position.X + speed, position.Y + speed);
+            Vector2f p = new Vector2f(position.X + scaledSpeed, position.Y + scaledSpeed);
             position = p;
             shape.Position = p;
         }
 
-        public override bool isOutsideBoundaries(RenderWindow window)
+        private void Kinematics(float dt)
         {
-            throw new NotImplementedException();
+            
         }
     }
 }

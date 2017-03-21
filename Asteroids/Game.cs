@@ -10,26 +10,24 @@ namespace Asteroids
         // protected means child classes have access
         protected RenderWindow window;
         protected Color clearColor;
-        protected const uint framerate = 30;
+
+        // Timing 
+        protected const uint FRAMERATE = 30;
+        protected float dt = 1.0f / FRAMERATE;
 
         public Game(uint width, uint height, String title, Color clrColor)
         {
             // Create the main window
             window = new RenderWindow(new VideoMode(width, height), title);
 
-            // Setup some window properties
-            window.SetFramerateLimit(framerate);
+            window.SetFramerateLimit(FRAMERATE);
 
             // Set color for window background
             clearColor = clrColor;
 
             // Setup up event handlers - Using delegates <- Read up on this
             window.Closed += Window_Closed;
-            window.KeyPressed += Window_KeyPressed;
         }
-
-        // Needs to be overrided, not sure if doing this right...
-        protected abstract void Window_KeyPressed(object sender, KeyEventArgs e);
 
         protected void Window_Closed(object sender, EventArgs e)
         {
@@ -49,7 +47,7 @@ namespace Asteroids
                 window.Clear(clearColor);
                 
                 // Update the game
-                Update(window);
+                Update(window,dt);
 
                 // Update the window
                 window.Display();
@@ -57,6 +55,6 @@ namespace Asteroids
             // End of game loop
         }
         public abstract void Init();
-        public abstract void Update(RenderWindow window);
+        public abstract void Update(RenderWindow window, float dt);
     }
 }

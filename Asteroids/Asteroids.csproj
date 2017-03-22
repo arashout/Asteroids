@@ -59,6 +59,7 @@
   <ItemGroup>
     <Compile Include="Asteroid.cs" />
     <Compile Include="Asteroids.cs" />
+    <Compile Include="CollisionHelper.cs" />
     <Compile Include="Entity.cs" />
     <Compile Include="Game.cs" />
     <Compile Include="MathExtension.cs" />

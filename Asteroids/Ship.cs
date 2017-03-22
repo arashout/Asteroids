@@ -2,7 +2,7 @@
 using SFML.System;
 using SFML.Window;
 using SFML.Graphics;
-
+using System.Collections.Generic;
 
 namespace Asteroids
 {
@@ -31,7 +31,6 @@ namespace Asteroids
 
         public Ship(Vector2f p, float sideLength)
         {
-           
             shape = new CircleShape(sideLength, 3); // CircleShape(~,3) creates a triangle
             shape.Scale = new Vector2f(0.7f, 1); // Make the ship longer than it is wide
 
@@ -45,21 +44,10 @@ namespace Asteroids
             heading = shape.Rotation; // Initialize heading (degrees)
 
             shape.FillColor = Color.White;
-            
         }
         public override void Draw(RenderWindow window)
         {
             window.Draw(shape);
-        }
-
-        /// <summary>
-        /// Checks if the ship has collided with a given asteroid "a"
-        /// </summary>
-        /// <param name="a">an asteroid</param>
-        /// <returns></returns>
-        public bool HasCollided(Asteroid a)
-        {
-            return true;
         }
         
 
@@ -77,6 +65,8 @@ namespace Asteroids
             // Rotation controls
             if (Keyboard.IsKeyPressed(Keyboard.Key.Right)) Rotate(1);
             else if (Keyboard.IsKeyPressed(Keyboard.Key.Left)) Rotate(-1);
+
+            // Position updates
             Kinematics(dt);
         }
         /// <summary>
@@ -94,7 +84,7 @@ namespace Asteroids
             float xComponent = (float) Math.Sin(headingRads) * thrustPower * direction;
             float yComponent = (float) Math.Cos(headingRads) * thrustPower * direction;
 
-            if (velocity.magnitudeSquared() < terminalVelocitySquared)
+            if (velocity.MagnitudeSquared() < terminalVelocitySquared)
             {
                 velocity = new Vector2f(velocity.X - xComponent, velocity.Y + yComponent);
                 hasThrust = true;
@@ -109,7 +99,7 @@ namespace Asteroids
         {
             position += velocity * dt;
             heading += angularVelocity * dt;
-
+            // Update new position and heading
             shape.Position = position;
             shape.Rotation = heading;
 
@@ -120,6 +110,24 @@ namespace Asteroids
 
             hasThrust = false;
             hasSpin = false;
+        }
+        /// <summary>
+        /// A utility function for collision checks that
+        /// returns all the coordinates of each vertex
+        /// in absolute frame coordinates
+        /// </summary>
+        /// <returns></returns>
+        public List<Vector2f> GetVertices()
+        {
+            List<Vector2f> points = new List<Vector2f> { };
+            for(Byte i = 0; i < shape.GetPointCount(); i++)
+            {
+                // Found this on SFML-dev.org
+                // Note: That GetPoint gives you only vertices from point of 
+                // view of the shape, that's why you need transform
+                points.Add(shape.Transform.TransformPoint(shape.GetPoint(i)));
+            }
+            return points;
         }
     }
 }

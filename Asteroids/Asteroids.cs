@@ -20,8 +20,8 @@ namespace Asteroids
             playerShip = new Ship(new Vector2f(window.Size.X / 2, window.Size.Y / 2), 20);
 
             Vector2f p = new Vector2f(window.Size.X / 3, window.Size.Y / 3);
-            Vector2f v = new Vector2f(2, 2);
-            a1 = new Asteroid(p, v);
+            Vector2f v = new Vector2f(0, 0);
+            a1 = new Asteroid(p, v, 20);
             Console.WriteLine("Asteroids started!");
         }
 
@@ -29,6 +29,7 @@ namespace Asteroids
         {
             playerShip.Update(dt);
             playerShip.Draw(window);
+            if (a1.HasCollided(playerShip) == true) Console.WriteLine("Collision!");
             a1.Update(dt);
             a1.Draw(window);
         }

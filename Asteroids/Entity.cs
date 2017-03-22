@@ -1,6 +1,7 @@
 ﻿using SFML.System;
 using SFML.Window;
 using SFML.Graphics;
+using System.Collections.Generic;
 
 namespace Asteroids
 {
@@ -8,7 +9,6 @@ namespace Asteroids
     {
         //Protected allows child classes to use properties
         protected Shape shape;
-        protected uint mass;
         protected Vector2f position;
         protected Vector2f velocity;
 

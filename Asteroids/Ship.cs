@@ -23,8 +23,9 @@ namespace Asteroids
         private const float rotationPower = 30;
         private const float thrustPower = 30;
 
-        private float terminalVelocitySquared = 30000;
+        private float terminalVelocitySquared = 30000; // To avoid SQRT
         private float decayRate = .9f;
+        private float angularDecayRate = .7f;
 
         private float heading;
         private float angularVelocity;
@@ -106,7 +107,7 @@ namespace Asteroids
             // Decaying Velocities, if the user hasn't recently
             // pressed down the thrust or spin keys then reduce speed
             if (!hasThrust) velocity = velocity * decayRate;
-            if (!hasSpin) angularVelocity = angularVelocity * decayRate;
+            if (!hasSpin) angularVelocity = angularVelocity * angularDecayRate;
 
             hasThrust = false;
             hasSpin = false;

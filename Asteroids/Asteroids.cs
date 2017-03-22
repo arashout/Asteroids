@@ -29,7 +29,14 @@ namespace Asteroids
         {
             playerShip.Update(dt);
             playerShip.Draw(window);
-            if (a1.HasCollided(playerShip) == true) Console.WriteLine("Collision!");
+            if (a1.HasCollided(playerShip) == true)
+            {
+                Console.WriteLine("Press enter when you are ready to restart");
+                Console.Out.Flush();
+                Console.ReadLine();
+                Init();
+                return;
+            }
             a1.Update(dt);
             a1.Draw(window);
         }

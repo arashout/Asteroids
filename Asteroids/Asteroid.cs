@@ -30,13 +30,15 @@ namespace Asteroids
             window.Draw(shape);
         }
 
-        public override void Update(float dt, List<Projectile> listProjectiles)
+        public override void Update(float dt)
         {
-        
+            // Position updates
+            Kinematics(dt);
         }
 
         private void Kinematics(float dt)
         {
+            shape.Position += velocity;
         }
         public Vector2f getCenterVertex()
         {
@@ -59,13 +61,18 @@ namespace Asteroids
             }
             return false;
         }
-        public bool ShouldExplode(Projectile p)
+        /// <summary>
+        /// Checks if a projectile has collided with this asteroid
+        /// </summary>
+        /// <param name="proj"></param>
+        /// <returns></returns>
+        public bool ShouldExplode(Projectile proj)
         {
             // Circle Circle Collision check
             // The distance between centers is less than sum of radii
-            float xDif = shape.Position.X - p.GetPostion().X;
-            float yDif = shape.Position.Y - p.GetPostion().Y;
-            float sumRadii = radius + p.GetRadius();
+            float xDif = shape.Position.X - proj.GetPostion().X;
+            float yDif = shape.Position.Y - proj.GetPostion().Y;
+            float sumRadii = radius + proj.Radius;
             return ((xDif * xDif) + (yDif * yDif)) <= (sumRadii * sumRadii);
         }
     }

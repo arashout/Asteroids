@@ -10,6 +10,10 @@ namespace Asteroids
         private const float radius = 5;
         private const float bulletSpeed = 10;
         private float heading;
+        // How many frames the projectile will persist for
+        private bool isExpired = false;
+        private Byte frameCounter = 0;
+        private const Byte maxFrames = 30;
 
         public Projectile(Vector2f p, float h)
         {
@@ -31,14 +35,28 @@ namespace Asteroids
         {
             return shape.Position;
         }
-        public float GetRadius()
+        public float Radius
         {
-            return radius;
+            get
+            {
+                return radius;
+            }
         }
-        public override void Update(float dt, List<Projectile> listProjectiles)
+
+        public override void Update(float dt)
         {
+            // If lifetime exceeded
+            if (frameCounter > maxFrames) isExpired = true;
+            frameCounter++;
             // Update new position of projectile
             shape.Position += velocity;
+        }
+        public bool IsExpired
+        {
+            get
+            {
+                return isExpired;
+            }
         }
     }
 }

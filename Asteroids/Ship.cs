@@ -18,7 +18,9 @@ namespace Asteroids
         // Has the user rotated, thrust, or shot recently
         private bool hasThrust = false;
         private bool hasSpin = false;
+        // More specific shooting variables
         private bool isShotCharged = false;
+        private bool wantsToShoot = false; // This variable is checked in the game loop
         private Byte shotCounter;
         private const Byte shotChargingTime = 5; //Amount of frames to be wait before shot is charged
 
@@ -26,6 +28,7 @@ namespace Asteroids
         private const float rotationPower = 30;
         private const float thrustPower = 30;
 
+        // Keeping the spaceship velocities reasonable
         private float terminalVelocitySquared = 30000; // To avoid SQRT
         private float decayRate = .9f;
         private float angularDecayRate = .7f;
@@ -58,7 +61,7 @@ namespace Asteroids
         /// kinematic equations to change the ships position
         /// </summary>
         /// <param name="dt">The elapsed time, used in kinematic equations</param>
-        public override void Update(float dt, List<Projectile> listProjectiles)
+        public override void Update(float dt)
         {
             // Thrust controls
             if (Keyboard.IsKeyPressed(Keyboard.Key.Up)) Thrust(-1);
@@ -67,7 +70,7 @@ namespace Asteroids
             if (Keyboard.IsKeyPressed(Keyboard.Key.Right)) Rotate(1);
             else if (Keyboard.IsKeyPressed(Keyboard.Key.Left)) Rotate(-1);
             // Shooting controls
-            if (Keyboard.IsKeyPressed(Keyboard.Key.Space) && isShotCharged) Shoot(listProjectiles);
+            if (Keyboard.IsKeyPressed(Keyboard.Key.Space) && isShotCharged) wantsToShoot = true;
             else ChargeShot();
             // Position updates
             Kinematics(dt);
@@ -117,11 +120,12 @@ namespace Asteroids
             hasThrust = false;
             hasSpin = false;
         }
-        private void Shoot(List<Projectile> listProjectiles)
+        public void Shoot(List<Projectile> listProjectiles)
         {
             // Impart the ships current position and velocity to projectile
             listProjectiles.Add(new Projectile(GetGunPosition(), shape.Rotation));
             // Restart counter
+            wantsToShoot = false;
             isShotCharged = false;
             shotCounter = 0;
 
@@ -139,7 +143,7 @@ namespace Asteroids
             {
                 // Found this on SFML-dev.org
                 // Note: That GetPoint gives you only vertices from point of 
-                // view of the shape, that's why you need transform
+                // view of the shape (local), that's why you need transform
                 points.Add(shape.Transform.TransformPoint(shape.GetPoint(i)));
             }
             return points;
@@ -148,10 +152,26 @@ namespace Asteroids
         {
             if (shotCounter >= shotChargingTime) isShotCharged = true;
             else shotCounter++;
+            wantsToShoot = false;
         }
         private Vector2f GetGunPosition()
         {
             return shape.Transform.TransformPoint(shape.GetPoint(3));
+        }
+        public bool IsShotCharged
+        {
+            get
+            {
+                return isShotCharged;
+            }
+        }
+
+        public bool WantsToShoot
+        {
+            get
+            {
+                return wantsToShoot;
+            }
         }
     }
 }

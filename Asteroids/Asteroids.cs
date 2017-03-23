@@ -10,12 +10,19 @@ namespace Asteroids
     class Asteroids : Game
     {
         private Ship playerShip;
-        private Asteroid a1;
         List<Projectile> listProjectiles;
         List<Asteroid> listAsteroids;
 
+        List<int> projectileDeletions;
+        List<int> asteroidDeletions;
+
         public Asteroids(uint width, uint height, string title, Color clrColor) : base(width, height, title, clrColor)
         {
+            listAsteroids = new List<Asteroid>();
+            listProjectiles = new List<Projectile>();
+
+            projectileDeletions = new List<int>();
+            asteroidDeletions = new List<int>();
         }
 
         public override void Init()
@@ -24,34 +31,62 @@ namespace Asteroids
 
             Vector2f p = new Vector2f(window.Size.X / 3, window.Size.Y / 3);
             Vector2f v = new Vector2f(0, 0);
-            a1 = new Asteroid(p, v, 20);
-            listAsteroids = new List<Asteroid> ();
-            listProjectiles = new List<Projectile>();
+            listAsteroids.Add(new Asteroid(p, v));
+
             Console.WriteLine("Asteroids started!");
         }
 
         public override void Update(RenderWindow window, float dt)
         {
-            playerShip.Update(dt, listProjectiles);
+            // Updates playerShip kinematics
+            playerShip.Update(dt);
+            // Check if player can shoot && wants to shoot
+            if (playerShip.WantsToShoot && playerShip.IsShotCharged) playerShip.Shoot(listProjectiles);
             playerShip.Draw(window);
-            foreach(Projectile proj in listProjectiles)
-            {
-                if (a1.ShouldExplode(proj)) Console.WriteLine("Asteroid should die");
 
-                proj.Update(dt, listProjectiles);
-                proj.Draw(window);
-            }
-            if (a1.HasCollided(playerShip) == true)
+            // For loops to check for collisions between everything
+            for (int i = 0; i < listAsteroids.Count; i++)
             {
-                Console.WriteLine("Press enter when you are ready to restart");
-                Console.Out.Flush();
-                Console.ReadLine();
-                Init();
-                return;
+                Asteroid a = listAsteroids[i]; // Current asteroid for convienience 
+                a.Update(dt);
+                // Check asteroid collision with ship
+                // If true then restart game
+                if (a.HasCollided(playerShip))
+                {
+                    Console.WriteLine("Press enter when you are ready to restart");
+                    Console.Out.Flush();
+                    Console.ReadLine();
+                    Init();
+                    return;
+                }
+                // Check asteroid collision with ship projectiles
+                for (int j = 0; j < listProjectiles.Count; j++)
+                {
+                    Projectile p = listProjectiles[j]; // Current projectile for convienience
+                    p.Update(dt);
+                    if (p.IsExpired) projectileDeletions.Add(j);
+                    else if (a.ShouldExplode(p))
+                    {
+                        projectileDeletions.Add(j);
+                        asteroidDeletions.Add(i);
+                    }
+                    else p.Draw(window);
+                }
+                a.Draw(window);
             }
-            
-            a1.Update(dt, listProjectiles);
-            a1.Draw(window);
+            // Delete all expired items
+            // Note: reverse for loop messing up list
+            for (int i = asteroidDeletions.Count - 1; i >= 0; i--)
+            {
+                listAsteroids.RemoveAt(asteroidDeletions[i]);
+            }
+            for (int j = projectileDeletions.Count - 1; j >= 0; j--)
+            {
+                listProjectiles.RemoveAt(projectileDeletions[j]);
+            }
+            asteroidDeletions.Clear();
+            projectileDeletions.Clear();
         }
+
     }
 }

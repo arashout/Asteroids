@@ -12,6 +12,6 @@ namespace Asteroids
         protected Vector2f velocity;
 
         abstract public void Draw(RenderWindow window);
-        abstract public void Update(float dt, List<Projectile> listProjectiles);
+        abstract public void Update(float dt);
     }
 }

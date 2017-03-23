@@ -5,14 +5,13 @@ using System.Collections.Generic;
 
 namespace Asteroids
 {
-    abstract class Entity
+    abstract public class Entity
     {
         //Protected allows child classes to use properties
         protected Shape shape;
-        protected Vector2f position;
         protected Vector2f velocity;
 
         abstract public void Draw(RenderWindow window);
-        abstract public void Update(float dt);
+        abstract public void Update(float dt, List<Projectile> listProjectiles);
     }
 }

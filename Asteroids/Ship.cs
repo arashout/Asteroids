@@ -27,7 +27,7 @@ namespace Asteroids
         private float decayRate = .9f;
         private float angularDecayRate = .7f;
 
-        private float heading;
+        // Note that shape.Rotation acts as angular position
         private float angularVelocity;
 
         public Ship(Vector2f p, float sideLength)
@@ -36,13 +36,10 @@ namespace Asteroids
             shape.Scale = new Vector2f(0.7f, 1); // Make the ship longer than it is wide
 
             // Set the center of the shape for convienience later
-            Vector2f o = new Vector2f(sideLength, sideLength);
-            shape.Origin = o;
+            shape.Origin = new Vector2f(sideLength, sideLength);
 
-            position = p;
             shape.Position = p;
             velocity = new Vector2f(0, 0);
-            heading = shape.Rotation; // Initialize heading (degrees)
 
             shape.FillColor = Color.White;
         }
@@ -58,7 +55,7 @@ namespace Asteroids
         /// kinematic equations to change the ships position
         /// </summary>
         /// <param name="dt">The elapsed time, used in kinematic equations</param>
-        public override void Update(float dt)
+        public override void Update(float dt, List<Projectile> listProjectiles)
         {
             // Thrust controls
             if (Keyboard.IsKeyPressed(Keyboard.Key.Up)) Thrust(-1);
@@ -66,6 +63,8 @@ namespace Asteroids
             // Rotation controls
             if (Keyboard.IsKeyPressed(Keyboard.Key.Right)) Rotate(1);
             else if (Keyboard.IsKeyPressed(Keyboard.Key.Left)) Rotate(-1);
+            // Shooting controls
+            if (Keyboard.IsKeyPressed(Keyboard.Key.Space)) Shoot(listProjectiles);
 
             // Position updates
             Kinematics(dt);
@@ -81,7 +80,7 @@ namespace Asteroids
         public void Thrust(sbyte direction)
         {
             
-            float headingRads = heading.degToRads();
+            float headingRads = shape.Rotation.degToRads();
             float xComponent = (float) Math.Sin(headingRads) * thrustPower * direction;
             float yComponent = (float) Math.Cos(headingRads) * thrustPower * direction;
 
@@ -96,13 +95,16 @@ namespace Asteroids
             angularVelocity += rotationPower * direction;
             hasSpin = true;
         }
+        /// <summary>
+        /// Applies toy kinematic equations to determine current
+        /// position and heading of the ship
+        /// </summary>
+        /// <param name="dt">A small timestep based on framerate</param>
         private void Kinematics(float dt)
         {
-            position += velocity * dt;
-            heading += angularVelocity * dt;
             // Update new position and heading
-            shape.Position = position;
-            shape.Rotation = heading;
+            shape.Position += velocity * dt;
+            shape.Rotation += angularVelocity * dt;
 
             // Decaying Velocities, if the user hasn't recently
             // pressed down the thrust or spin keys then reduce speed
@@ -111,6 +113,11 @@ namespace Asteroids
 
             hasThrust = false;
             hasSpin = false;
+        }
+        private void Shoot(List<Projectile> listProjectiles)
+        {
+            // Impart the ships current position and velocity to projectile
+            listProjectiles.Add(new Projectile(GetGunPosition(), shape.Rotation));
         }
         /// <summary>
         /// A utility function for collision checks that
@@ -129,6 +136,10 @@ namespace Asteroids
                 points.Add(shape.Transform.TransformPoint(shape.GetPoint(i)));
             }
             return points;
+        }
+        private Vector2f GetGunPosition()
+        {
+            return shape.Transform.TransformPoint(shape.GetPoint(3));
         }
     }
 }

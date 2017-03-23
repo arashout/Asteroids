@@ -18,8 +18,10 @@ namespace Asteroids
             radius = r;
             scaledSpeed = unscaledSpeed / r;
             shape = new CircleShape(radius);
+
             Vector2f o = new Vector2f(radius, radius);
             shape.Origin = o;
+
             shape.FillColor = Color.Yellow;
             shape.Position = p;
         }
@@ -28,7 +30,7 @@ namespace Asteroids
             window.Draw(shape);
         }
 
-        public override void Update(float dt)
+        public override void Update(float dt, List<Projectile> listProjectiles)
         {
         
         }
@@ -41,7 +43,7 @@ namespace Asteroids
             return shape.Position;
         }
         /// <summary>
-        /// Checks if the ship has collided with a given asteroid "a"
+        /// Checks if an asteroid has collided with ship s
         /// </summary>
         /// <param name="s">A ship</param>
         /// <returns></returns>
@@ -53,10 +55,18 @@ namespace Asteroids
             foreach (Vector2f p in shipVertices)
             {
                 c = p - shape.Position;
-                // Collision detected!
-                if (c.Magnitude() <= radius) return true;
+                if (c.MagnitudeSquared() <= (radius * radius) ) return true;
             }
             return false;
+        }
+        public bool ShouldExplode(Projectile p)
+        {
+            // Circle Circle Collision check
+            // The distance between centers is less than sum of radii
+            float xDif = shape.Position.X - p.GetPostion().X;
+            float yDif = shape.Position.Y - p.GetPostion().Y;
+            float sumRadii = radius + p.GetRadius();
+            return ((xDif * xDif) + (yDif * yDif)) <= (sumRadii * sumRadii);
         }
     }
 }

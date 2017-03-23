@@ -15,9 +15,12 @@ namespace Asteroids
     /// </summary> 
     class Ship : Entity
     {
-        // Has the user rotated or thrust recently
+        // Has the user rotated, thrust, or shot recently
         private bool hasThrust = false;
         private bool hasSpin = false;
+        private bool isShotCharged = false;
+        private Byte shotCounter;
+        private const Byte shotChargingTime = 5; //Amount of frames to be wait before shot is charged
 
         // How much to increase velocity by when key is pressed
         private const float rotationPower = 30;
@@ -64,8 +67,8 @@ namespace Asteroids
             if (Keyboard.IsKeyPressed(Keyboard.Key.Right)) Rotate(1);
             else if (Keyboard.IsKeyPressed(Keyboard.Key.Left)) Rotate(-1);
             // Shooting controls
-            if (Keyboard.IsKeyPressed(Keyboard.Key.Space)) Shoot(listProjectiles);
-
+            if (Keyboard.IsKeyPressed(Keyboard.Key.Space) && isShotCharged) Shoot(listProjectiles);
+            else ChargeShot();
             // Position updates
             Kinematics(dt);
         }
@@ -118,6 +121,10 @@ namespace Asteroids
         {
             // Impart the ships current position and velocity to projectile
             listProjectiles.Add(new Projectile(GetGunPosition(), shape.Rotation));
+            // Restart counter
+            isShotCharged = false;
+            shotCounter = 0;
+
         }
         /// <summary>
         /// A utility function for collision checks that
@@ -136,6 +143,11 @@ namespace Asteroids
                 points.Add(shape.Transform.TransformPoint(shape.GetPoint(i)));
             }
             return points;
+        }
+        private void ChargeShot()
+        {
+            if (shotCounter >= shotChargingTime) isShotCharged = true;
+            else shotCounter++;
         }
         private Vector2f GetGunPosition()
         {

@@ -85,7 +85,8 @@ namespace Asteroids
         /// </param>
         public void Thrust(sbyte direction)
         {
-            
+            // NOTE: The reason for the orientation of sin and cos is because shape.Rotation is 0 deg at "90 degrees"
+            // Essentially phase shifted by 90 degrees - SUJECT TO CHANGE
             float headingRads = shape.Rotation.degToRads();
             float xComponent = (float) Math.Sin(headingRads) * thrustPower * direction;
             float yComponent = (float) Math.Cos(headingRads) * thrustPower * direction;
@@ -158,6 +159,17 @@ namespace Asteroids
         {
             return shape.Transform.TransformPoint(shape.GetPoint(3));
         }
+
+        protected override Edge OutOfBoundsEdge(Window window)
+        {
+            throw new NotImplementedException();
+        }
+
+        protected override void ResetPosition(Edge edge, Window window)
+        {
+            throw new NotImplementedException();
+        }
+
         public bool IsShotCharged
         {
             get

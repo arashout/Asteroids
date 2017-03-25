@@ -6,7 +6,6 @@ using SFML.Graphics;
 
 namespace Asteroids
 {
-
     class Asteroids : Game
     {
         private Ship playerShip;
@@ -25,15 +24,36 @@ namespace Asteroids
             asteroidDeletions = new List<int>();
         }
 
+        public override void CleanUp()
+        {
+            // Clear all lists
+            listAsteroids.Clear();
+            listProjectiles.Clear();
+
+            asteroidDeletions.Clear();
+            projectileDeletions.Clear();
+
+            playerShip = null;
+        }
+
         public override void Init()
         {
             playerShip = new Ship(new Vector2f(window.Size.X / 2, window.Size.Y / 2), 20);
 
             Vector2f p = new Vector2f(window.Size.X / 3, window.Size.Y / 3);
-            Vector2f v = new Vector2f(0, 0);
+            Vector2f v = new Vector2f(3, 9);
             listAsteroids.Add(new Asteroid(p, v));
 
             Console.WriteLine("Asteroids started!");
+        }
+
+        public override void Restart()
+        {
+            Console.WriteLine("Press enter when you are ready to restart");
+            Console.Out.Flush();
+            Console.ReadLine();
+            CleanUp();
+            Init();
         }
 
         public override void Update(RenderWindow window, float dt)
@@ -53,10 +73,7 @@ namespace Asteroids
                 // If true then restart game
                 if (a.HasCollided(playerShip))
                 {
-                    Console.WriteLine("Press enter when you are ready to restart");
-                    Console.Out.Flush();
-                    Console.ReadLine();
-                    Init();
+                    Restart();
                     return;
                 }
                 // Check asteroid collision with ship projectiles

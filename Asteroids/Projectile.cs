@@ -2,6 +2,7 @@
 using SFML.System;
 using SFML.Graphics;
 using System;
+using SFML.Window;
 
 namespace Asteroids
 {
@@ -51,6 +52,17 @@ namespace Asteroids
             // Update new position of projectile
             shape.Position += velocity;
         }
+
+        protected override Edge OutOfBoundsEdge(Window window)
+        {
+            throw new NotImplementedException();
+        }
+
+        protected override void ResetPosition(Edge edge, Window window)
+        {
+            throw new NotImplementedException();
+        }
+
         public bool IsExpired
         {
             get

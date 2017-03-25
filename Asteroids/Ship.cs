@@ -180,7 +180,11 @@ namespace Asteroids
             else if ((shape.Position.Y - shipLength) > window.Size.Y) return Edge.DOWN;
             else return Edge.NULL;
         }
-
+        /// <summary>
+        /// Reset the ships position to the opposite edge of the one it just left
+        /// </summary>
+        /// <param name="edge"></param>
+        /// <param name="window"></param>
         protected override void ResetPosition(Edge edge, Window window)
         {
             if (edge == Edge.LEFT) shape.Position = new Vector2f(window.Size.X + shipLength, shape.Position.Y);

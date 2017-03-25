@@ -15,9 +15,13 @@ namespace Asteroids
     /// </summary> 
     class Ship : Entity
     {
+        // For out of bounds checks
+        private float shipLength;
+
         // Has the user rotated, thrust, or shot recently
         private bool hasThrust = false;
         private bool hasSpin = false;
+
         // More specific shooting variables
         private bool isShotCharged = false;
         private bool wantsToShoot = false; // This variable is checked in the game loop
@@ -29,7 +33,7 @@ namespace Asteroids
         private const float thrustPower = 30;
 
         // Keeping the spaceship velocities reasonable
-        private float terminalVelocitySquared = 30000; // To avoid SQRT
+        private float terminalVelocitySquared = 300*300; // To avoid SQRT
         private float decayRate = .9f;
         private float angularDecayRate = .7f;
 
@@ -38,6 +42,7 @@ namespace Asteroids
 
         public Ship(Vector2f p, float sideLength)
         {
+            shipLength = sideLength;
             shape = new CircleShape(sideLength, 3); // CircleShape(~,3) creates a triangle
             shape.Scale = new Vector2f(0.7f, 1); // Make the ship longer than it is wide
 
@@ -51,6 +56,8 @@ namespace Asteroids
         }
         public override void Draw(RenderWindow window)
         {
+            Edge curEdge = OutOfBoundsEdge(window);
+            if (curEdge != Edge.NULL) ResetPosition(curEdge, window); 
             window.Draw(shape);
         }
         
@@ -159,15 +166,27 @@ namespace Asteroids
         {
             return shape.Transform.TransformPoint(shape.GetPoint(3));
         }
-
+        /// <summary>
+        /// Check if ENTIRE ship is out of bounds and return 
+        /// corresponding edge
+        /// </summary>
+        /// <param name="window"></param>
+        /// <returns></returns>
         protected override Edge OutOfBoundsEdge(Window window)
         {
-            throw new NotImplementedException();
+            if ((shape.Position.X + shipLength) < 0) return Edge.LEFT;
+            else if ((shape.Position.X - shipLength) > window.Size.X) return Edge.RIGHT;
+            else if ((shape.Position.Y + shipLength) < 0) return Edge.UP;
+            else if ((shape.Position.Y - shipLength) > window.Size.Y) return Edge.DOWN;
+            else return Edge.NULL;
         }
 
         protected override void ResetPosition(Edge edge, Window window)
         {
-            throw new NotImplementedException();
+            if (edge == Edge.LEFT) shape.Position = new Vector2f(window.Size.X + shipLength, shape.Position.Y);
+            else if (edge == Edge.RIGHT) shape.Position = new Vector2f(-shipLength, shape.Position.Y);
+            else if (edge == Edge.UP) shape.Position = new Vector2f(shape.Position.X, window.Size.Y + shipLength);
+            else shape.Position = new Vector2f(shape.Position.X, -shipLength);
         }
 
         public bool IsShotCharged

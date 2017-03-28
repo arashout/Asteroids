@@ -56,8 +56,8 @@ namespace Asteroids
         }
         public override void Draw(RenderWindow window)
         {
-            Edge curEdge = OutOfBoundsEdge(window);
-            if (curEdge != Edge.NULL) ResetPosition(curEdge, window); 
+            Edge curEdge = OutOfBoundsEdge(window, shipLength/2);
+            if (curEdge != Edge.NULL) ResetPosition(curEdge, window, shipLength/2); 
             window.Draw(shape);
         }
         
@@ -164,33 +164,8 @@ namespace Asteroids
         }
         private Vector2f GetGunPosition()
         {
+            // This is the tip of the isoceles triangle that is the ship
             return shape.Transform.TransformPoint(shape.GetPoint(3));
-        }
-        /// <summary>
-        /// Check if ENTIRE ship is out of bounds and return 
-        /// corresponding edge
-        /// </summary>
-        /// <param name="window"></param>
-        /// <returns></returns>
-        protected override Edge OutOfBoundsEdge(Window window)
-        {
-            if ((shape.Position.X + shipLength) < 0) return Edge.LEFT;
-            else if ((shape.Position.X - shipLength) > window.Size.X) return Edge.RIGHT;
-            else if ((shape.Position.Y + shipLength) < 0) return Edge.UP;
-            else if ((shape.Position.Y - shipLength) > window.Size.Y) return Edge.DOWN;
-            else return Edge.NULL;
-        }
-        /// <summary>
-        /// Reset the ships position to the opposite edge of the one it just left
-        /// </summary>
-        /// <param name="edge"></param>
-        /// <param name="window"></param>
-        protected override void ResetPosition(Edge edge, Window window)
-        {
-            if (edge == Edge.LEFT) shape.Position = new Vector2f(window.Size.X + shipLength, shape.Position.Y);
-            else if (edge == Edge.RIGHT) shape.Position = new Vector2f(-shipLength, shape.Position.Y);
-            else if (edge == Edge.UP) shape.Position = new Vector2f(shape.Position.X, window.Size.Y + shipLength);
-            else shape.Position = new Vector2f(shape.Position.X, -shipLength);
         }
 
         public bool IsShotCharged

@@ -31,7 +31,7 @@ namespace Asteroids
         public override void Draw(RenderWindow window)
         {
             // If projectile leaves window, mark for deletion
-            if (OutOfBoundsEdge(window) != Edge.NULL) isExpired = true;
+            if (OutOfBoundsEdge(window, radius) != Edge.NULL) isExpired = true;
             window.Draw(shape);
         }
         public Vector2f GetPostion()
@@ -53,26 +53,6 @@ namespace Asteroids
             frameCounter++;
             // Update new position of projectile
             shape.Position += velocity;
-        }
-
-        /// <summary>
-        /// Determines if the projectile is COMPLETELY out of bounds and 
-        /// return the corresponding EDGE that it is outside of
-        /// </summary>
-        /// <param name="window"></param>
-        /// <returns>an Edge</returns>
-        protected override Edge OutOfBoundsEdge(Window window)
-        {
-            if ((shape.Position.X + radius) < 0) return Edge.LEFT;
-            else if ((shape.Position.X - radius) > window.Size.X) return Edge.RIGHT;
-            else if ((shape.Position.Y + radius) < 0) return Edge.UP;
-            else if ((shape.Position.Y - radius) > window.Size.Y) return Edge.DOWN;
-            else return Edge.NULL;
-        }
-
-        protected override void ResetPosition(Edge edge, Window window)
-        {
-            throw new NotImplementedException();
         }
 
         public bool IsExpired

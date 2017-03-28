@@ -29,8 +29,8 @@ namespace Asteroids
         public override void Draw(RenderWindow window)
         {
             // Check if out of bounds
-            Edge curEdge = OutOfBoundsEdge(window);
-            if (curEdge != Edge.NULL) ResetPosition(curEdge, window);
+            Edge curEdge = OutOfBoundsEdge(window, radius);
+            if (curEdge != Edge.NULL) ResetPosition(curEdge, window, radius);
 
             window.Draw(shape);
         }
@@ -79,28 +79,6 @@ namespace Asteroids
             float yDif = shape.Position.Y - proj.GetPostion().Y;
             float sumRadii = radius + proj.Radius;
             return ((xDif * xDif) + (yDif * yDif)) <= (sumRadii * sumRadii);
-        }
-        /// <summary>
-        /// Determines if the asteroid is COMPLETELY out of bounds and 
-        /// return the corresponding EDGE that it is outside of
-        /// </summary>
-        /// <param name="window"></param>
-        /// <returns>an Edge</returns>
-        protected override Edge OutOfBoundsEdge(Window window)
-        {
-            if ((shape.Position.X + radius) < 0) return Edge.LEFT;
-            else if ((shape.Position.X - radius) > window.Size.X) return Edge.RIGHT;
-            else if ((shape.Position.Y + radius) < 0) return Edge.UP;
-            else if ((shape.Position.Y - radius) > window.Size.Y) return Edge.DOWN;
-            else return Edge.NULL;
-        }
-
-        protected override void ResetPosition(Edge edge, Window window)
-        {
-            if (edge == Edge.LEFT) shape.Position = new Vector2f(window.Size.X + radius, shape.Position.Y);
-            else if (edge == Edge.RIGHT) shape.Position = new Vector2f(-radius, shape.Position.Y);
-            else if (edge == Edge.UP) shape.Position = new Vector2f(shape.Position.X, window.Size.Y + radius);
-            else shape.Position = new Vector2f(shape.Position.X, -radius);
         }
     }
 }

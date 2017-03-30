@@ -68,7 +68,7 @@ namespace Asteroids
         {
             CollisionChecks();
             DeletionPhase();
-            DrawAndUpdate();
+            UpdateAndDraw();
         }
         private Asteroid SpawnAsteroid(RenderWindow window)
         {
@@ -121,7 +121,7 @@ namespace Asteroids
             asteroidDeletions.Clear();
             projectileDeletions.Clear();
         }
-        private void DrawAndUpdate()
+        private void UpdateAndDraw()
         {
             playerShip.Update(dt);
             // Check if player can shoot && wants to shoot

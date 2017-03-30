@@ -13,14 +13,16 @@ namespace Asteroids
     class Asteroids : Game
     {
         private Ship playerShip;
-        List<Projectile> listProjectiles;
-        List<Asteroid> listAsteroids;
+        private List<Projectile> listProjectiles;
+        private List<Asteroid> listAsteroids;
 
-        List<int> projectileDeletions;
-        List<int> asteroidDeletions;
+        private List<int> projectileDeletions;
+        private List<int> asteroidDeletions;
 
         // Random object
-        Random rnd;
+        private Random rnd;
+
+        private int score;
 
         public Asteroids(uint width, uint height, string title, Color clrColor) : base(width, height, title, clrColor)
         {
@@ -50,7 +52,7 @@ namespace Asteroids
         {
             playerShip = new Ship(new Vector2f(window.Size.X / 2, window.Size.Y / 2), 20);
 
-            listAsteroids.Add(SpawnAsteroid(window));
+            listAsteroids.Add(SpawnAsteroid());
 
             Console.WriteLine("Asteroids started!");
         }
@@ -68,9 +70,10 @@ namespace Asteroids
         {
             CollisionChecks();
             DeletionPhase();
+            SpawnCheck();
             UpdateAndDraw();
         }
-        private Asteroid SpawnAsteroid(RenderWindow window)
+        private Asteroid SpawnAsteroid()
         {
             Vector2f p = new Vector2f(800, 800);
             Vector2f v = new Vector2f(rnd.Next(-10, 10), rnd.Next(-10, 10));
@@ -100,7 +103,7 @@ namespace Asteroids
                     {
                         projectileDeletions.Add(j);
                         asteroidDeletions.Add(i);
-                        listAsteroids.Add(SpawnAsteroid(window));
+                        score++;
                     }
                 }
                 
@@ -138,6 +141,10 @@ namespace Asteroids
                 p.Update(dt);
                 p.Draw(window);
             }
+        }
+        private void SpawnCheck()
+        {
+            if (listAsteroids.Count < score) listAsteroids.Add(SpawnAsteroid());
         }
     }
 }

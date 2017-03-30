@@ -7,9 +7,6 @@ namespace Asteroids
 {
     abstract public class Entity
     {
-        // To determine out of bounds edge
-        protected enum Edge { UP, DOWN, LEFT, RIGHT, NULL }
-
         //Protected allows child classes to use properties
         protected Shape shape;
         protected Vector2f velocity;

@@ -5,9 +5,11 @@ using SFML.Graphics;
 
 namespace Asteroids
 {
+    // To determine out of bounds edge
+    public enum Edge { UP, DOWN, LEFT, RIGHT, NULL }
+
     abstract class Game
     {
-        // protected means child classes have access
         protected RenderWindow window;
         protected Color clearColor;
 

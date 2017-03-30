@@ -6,6 +6,10 @@ using SFML.Graphics;
 
 namespace Asteroids
 {
+    static class Constants
+    {
+        public const int MAX_ASTEROID_SIZE = 50;
+    }
     class Asteroids : Game
     {
         private Ship playerShip;
@@ -15,8 +19,14 @@ namespace Asteroids
         List<int> projectileDeletions;
         List<int> asteroidDeletions;
 
+        // Random object
+        Random rnd;
+
         public Asteroids(uint width, uint height, string title, Color clrColor) : base(width, height, title, clrColor)
         {
+            // Initialize Random
+            rnd = new Random();
+
             listAsteroids = new List<Asteroid>();
             listProjectiles = new List<Projectile>();
 
@@ -40,9 +50,7 @@ namespace Asteroids
         {
             playerShip = new Ship(new Vector2f(window.Size.X / 2, window.Size.Y / 2), 20);
 
-            Vector2f p = new Vector2f(window.Size.X / 3, window.Size.Y / 3);
-            Vector2f v = new Vector2f(3, 9);
-            listAsteroids.Add(new Asteroid(p, v));
+            listAsteroids.Add(SpawnAsteroid(window));
 
             Console.WriteLine("Asteroids started!");
         }
@@ -86,6 +94,7 @@ namespace Asteroids
                     {
                         projectileDeletions.Add(j);
                         asteroidDeletions.Add(i);
+                        listAsteroids.Add(SpawnAsteroid(window));
                     }
                     else p.Draw(window);
                 }
@@ -104,6 +113,11 @@ namespace Asteroids
             asteroidDeletions.Clear();
             projectileDeletions.Clear();
         }
-
+        private Asteroid SpawnAsteroid(RenderWindow window)
+        {
+            Vector2f p = new Vector2f(800, 800);
+            Vector2f v = new Vector2f(rnd.Next(-10, 10), rnd.Next(-10, 10));
+            return new Asteroid(p, v);
+        }
     }
 }

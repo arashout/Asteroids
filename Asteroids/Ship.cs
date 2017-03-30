@@ -33,9 +33,9 @@ namespace Asteroids
         private const float thrustPower = 30;
 
         // Keeping the spaceship velocities reasonable
-        private float terminalVelocitySquared = 300*300; // To avoid SQRT
-        private float decayRate = .9f;
-        private float angularDecayRate = .7f;
+        private const float terminalVelocitySquared = 300*300; // To avoid SQRT
+        private const float decayRate = .9f;
+        private const float angularDecayRate = .7f;
 
         // Note that shape.Rotation acts as angular position
         private float angularVelocity;
@@ -131,7 +131,7 @@ namespace Asteroids
         public void Shoot(List<Projectile> listProjectiles)
         {
             // Impart the ships current position and velocity to projectile
-            listProjectiles.Add(new Projectile(GetGunPosition(), shape.Rotation));
+            listProjectiles.Add(new Projectile(GetGunPosition(), velocity, shape.Rotation));
             // Restart counter
             wantsToShoot = false;
             isShotCharged = false;

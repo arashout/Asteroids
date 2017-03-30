@@ -9,24 +9,28 @@ namespace Asteroids
     public class Projectile : Entity
     {
         private const float radius = 5;
-        private const float bulletSpeed = 10;
+        private const float baseProjectileSpeed = 10;
+        private const float terminalSpeed = 50;
         private float heading;
         // How many frames the projectile will persist for
         private bool isExpired = false;
         private Byte frameCounter = 0;
         private const Byte maxFrames = 30;
 
-        public Projectile(Vector2f p, float h)
+        public Projectile(Vector2f p, Vector2f v, float direction)
         {
             shape = new CircleShape(radius);
             shape.Origin = new Vector2f(radius, radius);
             shape.FillColor = Color.Cyan;
             shape.Position = p;
 
-            // Add additionally velocity to bullet in addition to ship velocity
-            heading = h.degToRads();
+            // Determine direction of bullet based on ship direction
+            heading = direction.degToRads();
             Vector2f components = new Vector2f((float)Math.Sin(heading), (float) Math.Cos(heading)*-1);
-            velocity = components * bulletSpeed;
+            // Scale bullet velocity with ship velocity + base bullet speed
+            float scale = v.Magnitude()/100 + baseProjectileSpeed;
+            if (scale > terminalSpeed) scale = terminalSpeed;
+            velocity = components * scale;
         }
         public override void Draw(RenderWindow window)
         {

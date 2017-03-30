@@ -128,10 +128,12 @@ namespace Asteroids
             hasThrust = false;
             hasSpin = false;
         }
-        public void Shoot(List<Projectile> listProjectiles)
+        public void Shoot(Dictionary<string, Projectile> dictProjectiles)
         {
             // Impart the ships current position and velocity to projectile
-            listProjectiles.Add(new Projectile(GetGunPosition(), velocity, shape.Rotation));
+            Projectile p = new Projectile(GetGunPosition(), velocity, shape.Rotation);
+            string key = p.GetId;
+            dictProjectiles.Add(key, p);
             // Restart counter
             wantsToShoot = false;
             isShotCharged = false;

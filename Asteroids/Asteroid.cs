@@ -8,12 +8,14 @@ namespace Asteroids
 {
     class Asteroid : Entity
     {
+        private static long count = 0;
         private float radius;
         private const float unscaledSpeed = 25;
         private float scaledSpeed;
 
         public Asteroid(Vector2f p, Vector2f v, uint r = 25)
         {
+            id = "A" + count.ToString();
             // Asteroid default
             radius = r;
             scaledSpeed = unscaledSpeed / r;

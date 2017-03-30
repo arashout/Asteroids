@@ -8,6 +8,7 @@ namespace Asteroids
 {
     public class Projectile : Entity
     {
+        private static int count = 0;
         private const float radius = 5;
         private const float baseProjectileSpeed = 10;
         private const float terminalSpeed = 50;
@@ -19,6 +20,8 @@ namespace Asteroids
 
         public Projectile(Vector2f p, Vector2f v, float direction)
         {
+            id = "P" + count.ToString();
+            count++;
             shape = new CircleShape(radius);
             shape.Origin = new Vector2f(radius, radius);
             shape.FillColor = Color.Cyan;
@@ -58,7 +61,6 @@ namespace Asteroids
             // Update new position of projectile
             shape.Position += velocity;
         }
-
         public bool IsExpired
         {
             get

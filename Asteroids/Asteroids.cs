@@ -13,10 +13,10 @@ namespace Asteroids
     class Asteroids : Game
     {
         private Ship playerShip;
-        private List<Projectile> listProjectiles;
+        private Dictionary<string, Projectile> dictProjectiles;
         private List<Asteroid> listAsteroids;
 
-        private List<int> projectileDeletions;
+        private HashSet<string> projectileDeletions;
         private List<int> asteroidDeletions;
 
         // Random object
@@ -30,9 +30,9 @@ namespace Asteroids
             rnd = new Random();
 
             listAsteroids = new List<Asteroid>();
-            listProjectiles = new List<Projectile>();
+            dictProjectiles = new Dictionary<string, Projectile>();
 
-            projectileDeletions = new List<int>();
+            projectileDeletions = new HashSet<string>();
             asteroidDeletions = new List<int>();
         }
 
@@ -40,7 +40,7 @@ namespace Asteroids
         {
             // Clear all lists
             listAsteroids.Clear();
-            listProjectiles.Clear();
+            dictProjectiles.Clear();
 
             asteroidDeletions.Clear();
             projectileDeletions.Clear();
@@ -87,14 +87,14 @@ namespace Asteroids
                     return;
                 }
                 // Check asteroid collision with ship projectiles
-                for (int j = 0; j < listProjectiles.Count; j++)
+                foreach (KeyValuePair<string, Projectile> kvp in dictProjectiles)
                 {
-                    Projectile p = listProjectiles[j]; // Current projectile for convienience
-                    
-                    if (p.IsExpired) projectileDeletions.Add(j);
+                    Projectile p = kvp.Value; ; // Current projectile for convienience
+                    string pId = kvp.Key;
+                    if (p.IsExpired) projectileDeletions.Add(pId);
                     else if (a.ShouldExplode(p))
                     {
-                        projectileDeletions.Add(j);
+                        projectileDeletions.Add(pId);
                         asteroidDeletions.Add(i);
                         score++;
                     }
@@ -110,9 +110,10 @@ namespace Asteroids
             {
                 listAsteroids.RemoveAt(asteroidDeletions[i]);
             }
-            for (int j = projectileDeletions.Count - 1; j >= 0; j--)
+            
+            foreach (string pId in projectileDeletions)
             {
-                if(j < listProjectiles.Count) listProjectiles.RemoveAt(projectileDeletions[j]);
+                dictProjectiles.Remove(pId);
             }
             asteroidDeletions.Clear();
             projectileDeletions.Clear();
@@ -121,7 +122,7 @@ namespace Asteroids
         {
             playerShip.Update(dt);
             // Check if player can shoot && wants to shoot
-            if (playerShip.WantsToShoot && playerShip.IsShotCharged) playerShip.Shoot(listProjectiles);
+            if (playerShip.WantsToShoot && playerShip.IsShotCharged) playerShip.Shoot(dictProjectiles);
             playerShip.Draw(window);
 
             foreach (Asteroid a in listAsteroids)
@@ -129,7 +130,7 @@ namespace Asteroids
                 a.Update(dt);
                 a.Draw(window);
             }
-            foreach(Projectile p in listProjectiles)
+            foreach (Projectile p in dictProjectiles.Values)
             {
                 p.Update(dt);
                 p.Draw(window);

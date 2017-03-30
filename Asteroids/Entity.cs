@@ -7,6 +7,7 @@ namespace Asteroids
 {
     abstract public class Entity
     {
+        protected string id;
         //Protected allows child classes to use properties
         protected Shape shape;
         protected Vector2f velocity;
@@ -27,6 +28,13 @@ namespace Asteroids
             else if (edge == Edge.RIGHT) shape.Position = new Vector2f(-halfCharacteristicLength, shape.Position.Y);
             else if (edge == Edge.UP) shape.Position = new Vector2f(shape.Position.X, window.Size.Y + halfCharacteristicLength);
             else shape.Position = new Vector2f(shape.Position.X, -halfCharacteristicLength);
+        }
+        public string GetId
+        {
+            get
+            {
+                return id;
+            }
         }
     }
 }

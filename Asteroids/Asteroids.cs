@@ -66,17 +66,23 @@ namespace Asteroids
 
         public override void Update(RenderWindow window, float dt)
         {
-            // Updates playerShip kinematics
-            playerShip.Update(dt);
-            // Check if player can shoot && wants to shoot
-            if (playerShip.WantsToShoot && playerShip.IsShotCharged) playerShip.Shoot(listProjectiles);
-            playerShip.Draw(window);
-
+            CollisionChecks();
+            DeletionPhase();
+            DrawAndUpdate();
+        }
+        private Asteroid SpawnAsteroid(RenderWindow window)
+        {
+            Vector2f p = new Vector2f(800, 800);
+            Vector2f v = new Vector2f(rnd.Next(-10, 10), rnd.Next(-10, 10));
+            return new Asteroid(p, v);
+        }
+        private void CollisionChecks()
+        {
             // For loops to check for collisions between everything
             for (int i = 0; i < listAsteroids.Count; i++)
             {
                 Asteroid a = listAsteroids[i]; // Current asteroid for convienience 
-                a.Update(dt);
+                
                 // Check asteroid collision with ship
                 // If true then restart game
                 if (a.HasCollided(playerShip))
@@ -88,7 +94,7 @@ namespace Asteroids
                 for (int j = 0; j < listProjectiles.Count; j++)
                 {
                     Projectile p = listProjectiles[j]; // Current projectile for convienience
-                    p.Update(dt);
+                    
                     if (p.IsExpired) projectileDeletions.Add(j);
                     else if (a.ShouldExplode(p))
                     {
@@ -96,12 +102,14 @@ namespace Asteroids
                         asteroidDeletions.Add(i);
                         listAsteroids.Add(SpawnAsteroid(window));
                     }
-                    else p.Draw(window);
                 }
-                a.Draw(window);
+                
             }
+        }
+        private void DeletionPhase()
+        {
             // Delete all expired items
-            // Note: reverse for loop messing up list
+            // Note: reverse for loop to avoid messing up list
             for (int i = asteroidDeletions.Count - 1; i >= 0; i--)
             {
                 listAsteroids.RemoveAt(asteroidDeletions[i]);
@@ -113,11 +121,23 @@ namespace Asteroids
             asteroidDeletions.Clear();
             projectileDeletions.Clear();
         }
-        private Asteroid SpawnAsteroid(RenderWindow window)
+        private void DrawAndUpdate()
         {
-            Vector2f p = new Vector2f(800, 800);
-            Vector2f v = new Vector2f(rnd.Next(-10, 10), rnd.Next(-10, 10));
-            return new Asteroid(p, v);
+            playerShip.Update(dt);
+            // Check if player can shoot && wants to shoot
+            if (playerShip.WantsToShoot && playerShip.IsShotCharged) playerShip.Shoot(listProjectiles);
+            playerShip.Draw(window);
+
+            foreach (Asteroid a in listAsteroids)
+            {
+                a.Update(dt);
+                a.Draw(window);
+            }
+            foreach(Projectile p in listProjectiles)
+            {
+                p.Update(dt);
+                p.Draw(window);
+            }
         }
     }
 }

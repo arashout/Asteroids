@@ -10,6 +10,7 @@ namespace Asteroids
         protected string id;
         //Protected allows child classes to use properties
         protected Shape shape;
+        protected Sprite sprite;
         protected Vector2f velocity;
 
         abstract public void Draw(RenderWindow window);

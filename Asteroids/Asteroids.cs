@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using SFML.System;
 using SFML.Window;
+using System.Drawing;
 using SFML.Graphics;
+using System.IO;
 
 namespace Asteroids
 {
@@ -26,6 +28,8 @@ namespace Asteroids
         // The result of floor(score, SPAWN_SCALE_FACTOR) decides how many asteroids are on the screen at once 
         private int score; 
         private const float SPAWN_SCALE_FACTOR = 2;
+        // Texture objects
+        Texture asteroidTexture;
 
         public Asteroids(uint width, uint height, string title, Color clrColor) : base(width, height, title, clrColor)
         {
@@ -37,6 +41,10 @@ namespace Asteroids
 
             projectileDeletions = new HashSet<string>();
             asteroidDeletions = new HashSet<string>();
+
+            // Assign textures to entities
+            asteroidTexture = new Texture(@"rock.png");
+
         }
 
         public override void CleanUp()
@@ -212,7 +220,7 @@ namespace Asteroids
             Vector2f p = new Vector2f(xPos, yPos);
             Vector2f v = new Vector2f(xVel, yVel);
             asteroidRadius = rnd.Next(MIN_ASTEROID_SIZE, MAX_ASTEROID_SIZE);
-            return new Asteroid(p, v, (uint) asteroidRadius);
+            return new Asteroid(p, v, asteroidTexture, (uint) asteroidRadius);
         }
     }
 }

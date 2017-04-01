@@ -10,11 +10,14 @@ namespace Asteroids
         protected string id;
         //Protected allows child classes to use properties
         protected Shape shape;
-        protected Sprite sprite;
         protected Vector2f velocity;
 
         abstract public void Draw(RenderWindow window);
         abstract public void Update(float dt);
+        virtual protected void LoadTexture(Texture t)
+        {
+            shape.Texture = t;
+        }
         virtual protected Edge OutOfBoundsEdge(Window window, float halfCharacteristicLength)
         {
             if ((shape.Position.X + halfCharacteristicLength) < 0) return Edge.LEFT;

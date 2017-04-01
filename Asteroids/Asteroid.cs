@@ -12,7 +12,7 @@ namespace Asteroids
         private float radius;
         private const float BASE_LINE_SPEED = 5;
 
-        public Asteroid(Vector2f p, Vector2f v, uint r = 25)
+        public Asteroid(Vector2f p, Vector2f v, Texture t, uint r = 25)
         {
             // ID creation
             id = "A" + count.ToString();
@@ -28,6 +28,7 @@ namespace Asteroids
             shape.Origin = o;
             shape.FillColor = Color.Yellow;
             shape.Position = p;
+            shape.Texture = t;
         }
         public override void Draw(RenderWindow window)
         {

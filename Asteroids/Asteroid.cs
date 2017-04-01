@@ -10,22 +10,22 @@ namespace Asteroids
     {
         private static long count = 0;
         private float radius;
-        private const float unscaledSpeed = 25;
-        private float scaledSpeed;
+        private const float BASE_LINE_SPEED = 5;
 
         public Asteroid(Vector2f p, Vector2f v, uint r = 25)
         {
+            // ID creation
             id = "A" + count.ToString();
             count++;
-            // Asteroid default
+
+            // Getting asteroid speed based on radius
             radius = r;
-            scaledSpeed = unscaledSpeed / r;
-            shape = new CircleShape(radius);
+            // Bigger asteroids should move slower
+            velocity = v/radius + v/v.Magnitude() * BASE_LINE_SPEED ;
 
-            velocity = v;
             Vector2f o = new Vector2f(radius, radius);
+            shape = new CircleShape(radius);
             shape.Origin = o;
-
             shape.FillColor = Color.Yellow;
             shape.Position = p;
         }

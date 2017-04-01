@@ -6,12 +6,9 @@ using SFML.Graphics;
 
 namespace Asteroids
 {
-    static class Constants
-    {
-        public const int MAX_ASTEROID_SIZE = 50;
-    }
     class Asteroids : Game
     {
+        // Private variables that essentially 
         private Ship playerShip;
         private Dictionary<string, Projectile> dictProjectiles;
         private Dictionary<string, Asteroid> dictAsteroids;
@@ -19,10 +16,11 @@ namespace Asteroids
         private HashSet<string> projectileDeletions;
         private HashSet<string> asteroidDeletions;
 
-        // Random object asteroid spawning variables
+        // Variables relevant to spawning asteroids
         private Random rnd;
         private Array edgeArray = Enum.GetValues(typeof(Edge));
-        private double spawnChance = .10; // Chance that a asteroid spawns
+        private const double SPAWN_CHANCE = .10; // Chance that a asteroid spawns
+        public const int MAX_ASTEROID_SIZE = 50;
         private int score; // Decides how many asteroids can be on screen at once
 
         public Asteroids(uint width, uint height, string title, Color clrColor) : base(width, height, title, clrColor)
@@ -135,13 +133,13 @@ namespace Asteroids
             if (dictAsteroids.Count <= score)
             {
                 // Random chance to spawn
-                if(rnd.NextDouble() < spawnChance)
+                if(rnd.NextDouble() < SPAWN_CHANCE)
                 {
                     // Get a random edge to spawn Asteroid at
                     Edge randomEdge = (Edge)edgeArray.GetValue(rnd.Next(edgeArray.Length));
                     if (randomEdge != Edge.NULL)
                     {
-                        Asteroid newAsteroid = SpawnAsteroid(randomEdge);
+                        Asteroid newAsteroid = SpawnAsteroid(window, randomEdge);
                         dictAsteroids.Add(newAsteroid.GetId, newAsteroid);
                     };
                 }
@@ -155,26 +153,26 @@ namespace Asteroids
             switch (edge)
             {
                 case Edge.LEFT:
-                    xPos = 0 - Constants.MAX_ASTEROID_SIZE;
+                    xPos = 0 - MAX_ASTEROID_SIZE;
                     yPos = rnd.Next(0, (int) window.Size.Y);
                     xVel = rnd.Next(0, 10);
                     yVel = rnd.Next(-10, 10);
                     break;
                 case Edge.RIGHT:
-                    xPos = window.Size.X + Constants.MAX_ASTEROID_SIZE;
+                    xPos = window.Size.X + MAX_ASTEROID_SIZE;
                     yPos = rnd.Next(0, (int) window.Size.Y);
                     xVel = rnd.Next(-10, 0);
                     yVel = rnd.Next(-10, 10);
                     break;
                 case Edge.UP:
                     xPos = rnd.Next(0, (int) window.Size.X);
-                    yPos = 0 - Constants.MAX_ASTEROID_SIZE;
+                    yPos = 0 - MAX_ASTEROID_SIZE;
                     xVel = rnd.Next(-10, 10);
                     yVel = rnd.Next(0, 10);
                     break;
                 case Edge.DOWN:
                     xPos = rnd.Next(0, (int) window.Size.X);
-                    yPos = window.Size.Y + Constants.MAX_ASTEROID_SIZE;
+                    yPos = window.Size.Y + MAX_ASTEROID_SIZE;
                     xVel = rnd.Next(-10, 10);
                     yVel = rnd.Next(-10, 0);
                     break;

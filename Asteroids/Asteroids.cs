@@ -20,6 +20,7 @@ namespace Asteroids
         private Random rnd;
         private Array edgeArray = Enum.GetValues(typeof(Edge));
         private const double SPAWN_CHANCE = .10; // Chance that a asteroid spawns
+        public const int MIN_ASTEROID_SIZE = 25;
         public const int MAX_ASTEROID_SIZE = 50;
         public const int MAX_UNSCALED_ASTEROID_SPEED = 25;
         private int score; // Decides how many asteroids can be on screen at once
@@ -150,6 +151,7 @@ namespace Asteroids
         {
             // I have to initalize variables?
             float xPos, yPos, xVel, yVel;
+            int asteroidRadius;
             xPos = 0; yPos = 0; xVel = 0; yVel = 0;
             switch (edge)
             {
@@ -180,7 +182,8 @@ namespace Asteroids
             }
             Vector2f p = new Vector2f(xPos, yPos);
             Vector2f v = new Vector2f(xVel, yVel);
-            return new Asteroid(p, v);
+            asteroidRadius = rnd.Next(MIN_ASTEROID_SIZE, MAX_ASTEROID_SIZE);
+            return new Asteroid(p, v, (uint) asteroidRadius);
         }
     }
 }

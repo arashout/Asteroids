@@ -23,7 +23,9 @@ namespace Asteroids
         public const int MIN_ASTEROID_SIZE = 25;
         public const int MAX_ASTEROID_SIZE = 50;
         public const int MAX_UNSCALED_ASTEROID_SPEED = 25;
-        private int score; // Decides how many asteroids can be on screen at once
+        // The result of floor(score, SPAWN_SCALE_FACTOR) decides how many asteroids are on the screen at once 
+        private int score; 
+        private const float SPAWN_SCALE_FACTOR = 2;
 
         public Asteroids(uint width, uint height, string title, Color clrColor) : base(width, height, title, clrColor)
         {
@@ -132,7 +134,7 @@ namespace Asteroids
         }
         private void SpawnCheck()
         {
-            if (dictAsteroids.Count <= score)
+            if (dictAsteroids.Count <= score/SPAWN_SCALE_FACTOR)
             {
                 // Random chance to spawn
                 if(rnd.NextDouble() < SPAWN_CHANCE)

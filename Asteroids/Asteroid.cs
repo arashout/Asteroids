@@ -16,6 +16,7 @@ namespace Asteroids
         public Asteroid(Vector2f p, Vector2f v, uint r = 25)
         {
             id = "A" + count.ToString();
+            count++;
             // Asteroid default
             radius = r;
             scaledSpeed = unscaledSpeed / r;

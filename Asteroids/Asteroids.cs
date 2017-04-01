@@ -14,10 +14,10 @@ namespace Asteroids
     {
         private Ship playerShip;
         private Dictionary<string, Projectile> dictProjectiles;
-        private List<Asteroid> listAsteroids;
+        private Dictionary<string, Asteroid> dictAsteroids;
 
         private HashSet<string> projectileDeletions;
-        private List<int> asteroidDeletions;
+        private HashSet<string> asteroidDeletions;
 
         // Random object
         private Random rnd;
@@ -29,21 +29,21 @@ namespace Asteroids
             // Initialize Random
             rnd = new Random();
 
-            listAsteroids = new List<Asteroid>();
+            dictAsteroids = new Dictionary<string, Asteroid>();
             dictProjectiles = new Dictionary<string, Projectile>();
 
             projectileDeletions = new HashSet<string>();
-            asteroidDeletions = new List<int>();
+            asteroidDeletions = new HashSet<string>();
         }
 
         public override void CleanUp()
         {
-            // Clear all lists
-            listAsteroids.Clear();
+            // Clear all data containers
+            dictAsteroids.Clear();
             dictProjectiles.Clear();
 
-            asteroidDeletions.Clear();
             projectileDeletions.Clear();
+            asteroidDeletions.Clear();
 
             score = 0;
             playerShip = null;
@@ -75,10 +75,8 @@ namespace Asteroids
         private void CollisionChecks()
         {
             // For loops to check for collisions between everything
-            for (int i = 0; i < listAsteroids.Count; i++)
+            foreach (Asteroid a in dictAsteroids.Values)
             {
-                Asteroid a = listAsteroids[i]; // Current asteroid for convienience 
-                
                 // Check asteroid collision with ship
                 // If true then restart game
                 if (a.HasCollided(playerShip))
@@ -87,15 +85,14 @@ namespace Asteroids
                     return;
                 }
                 // Check asteroid collision with ship projectiles
-                foreach (KeyValuePair<string, Projectile> kvp in dictProjectiles)
+                foreach (Projectile p in dictProjectiles.Values)
                 {
-                    Projectile p = kvp.Value; ; // Current projectile for convienience
-                    string pId = kvp.Key;
-                    if (p.IsExpired) projectileDeletions.Add(pId);
+                    // Add any deletions to deletion sets
+                    if (p.IsExpired) projectileDeletions.Add(p.GetId);
                     else if (a.ShouldExplode(p))
                     {
-                        projectileDeletions.Add(pId);
-                        asteroidDeletions.Add(i);
+                        asteroidDeletions.Add(a.GetId);
+                        projectileDeletions.Add(p.GetId);
                         score++;
                     }
                 }
@@ -104,19 +101,15 @@ namespace Asteroids
         }
         private void DeletionPhase()
         {
-            // Delete all expired items
-            // Note: reverse for loop to avoid messing up list
-            for (int i = asteroidDeletions.Count - 1; i >= 0; i--)
-            {
-                listAsteroids.RemoveAt(asteroidDeletions[i]);
-            }
-            
             foreach (string pId in projectileDeletions)
             {
                 dictProjectiles.Remove(pId);
             }
-            asteroidDeletions.Clear();
-            projectileDeletions.Clear();
+            foreach (string aId in asteroidDeletions)
+            {
+                dictAsteroids.Remove(aId);
+            }
+
         }
         private void UpdateAndDraw()
         {
@@ -125,7 +118,7 @@ namespace Asteroids
             if (playerShip.WantsToShoot && playerShip.IsShotCharged) playerShip.Shoot(dictProjectiles);
             playerShip.Draw(window);
 
-            foreach (Asteroid a in listAsteroids)
+            foreach (Asteroid a in dictAsteroids.Values)
             {
                 a.Update(dt);
                 a.Draw(window);
@@ -138,11 +131,14 @@ namespace Asteroids
         }
         private void SpawnCheck()
         {
-            if (listAsteroids.Count <= score)
+            if (dictAsteroids.Count <= score)
             {
                 // Get a random edge to spawn Asteroid at
                 Edge randomEdge = (Edge)edgeArray.GetValue(rnd.Next(edgeArray.Length));
-                if (randomEdge != Edge.NULL) listAsteroids.Add(SpawnAsteroid(randomEdge));
+                if (randomEdge != Edge.NULL) {
+                    Asteroid newAsteroid = SpawnAsteroid(randomEdge);
+                    dictAsteroids.Add(newAsteroid.GetId, newAsteroid);
+                };
             };
         }
         private Asteroid SpawnAsteroid(Edge edge)

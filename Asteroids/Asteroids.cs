@@ -21,6 +21,7 @@ namespace Asteroids
         private Array edgeArray = Enum.GetValues(typeof(Edge));
         private const double SPAWN_CHANCE = .10; // Chance that a asteroid spawns
         public const int MAX_ASTEROID_SIZE = 50;
+        public const int MAX_UNSCALED_ASTEROID_SPEED = 10;
         private int score; // Decides how many asteroids can be on screen at once
 
         public Asteroids(uint width, uint height, string title, Color clrColor) : base(width, height, title, clrColor)
@@ -155,26 +156,26 @@ namespace Asteroids
                 case Edge.LEFT:
                     xPos = 0 - MAX_ASTEROID_SIZE;
                     yPos = rnd.Next(0, (int) window.Size.Y);
-                    xVel = rnd.Next(0, 10);
-                    yVel = rnd.Next(-10, 10);
+                    xVel = rnd.Next(0, MAX_UNSCALED_ASTEROID_SPEED);
+                    yVel = rnd.Next(-MAX_UNSCALED_ASTEROID_SPEED, MAX_UNSCALED_ASTEROID_SPEED);
                     break;
                 case Edge.RIGHT:
                     xPos = window.Size.X + MAX_ASTEROID_SIZE;
                     yPos = rnd.Next(0, (int) window.Size.Y);
-                    xVel = rnd.Next(-10, 0);
-                    yVel = rnd.Next(-10, 10);
+                    xVel = rnd.Next(-MAX_UNSCALED_ASTEROID_SPEED, 0);
+                    yVel = rnd.Next(-MAX_UNSCALED_ASTEROID_SPEED, MAX_UNSCALED_ASTEROID_SPEED);
                     break;
                 case Edge.UP:
                     xPos = rnd.Next(0, (int) window.Size.X);
                     yPos = 0 - MAX_ASTEROID_SIZE;
-                    xVel = rnd.Next(-10, 10);
-                    yVel = rnd.Next(0, 10);
+                    xVel = rnd.Next(-MAX_UNSCALED_ASTEROID_SPEED, MAX_UNSCALED_ASTEROID_SPEED);
+                    yVel = rnd.Next(0, MAX_UNSCALED_ASTEROID_SPEED);
                     break;
                 case Edge.DOWN:
                     xPos = rnd.Next(0, (int) window.Size.X);
                     yPos = window.Size.Y + MAX_ASTEROID_SIZE;
-                    xVel = rnd.Next(-10, 10);
-                    yVel = rnd.Next(-10, 0);
+                    xVel = rnd.Next(-MAX_UNSCALED_ASTEROID_SPEED, MAX_UNSCALED_ASTEROID_SPEED);
+                    yVel = rnd.Next(-MAX_UNSCALED_ASTEROID_SPEED, 0);
                     break;
             }
             Vector2f p = new Vector2f(xPos, yPos);

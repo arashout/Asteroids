@@ -70,11 +70,17 @@ namespace Asteroids
 
         public override void Update(RenderWindow window, float dt)
         {
-            SpawnCheck();
+            SpawningPhase();
             CollisionChecks();
             DeletionPhase();
-            UpdateAndDraw();
+            UpdateAndDrawPhase();
         }
+        /// <summary>
+        /// Checks for collision between entities
+        /// 1. For player-asteroid collision game ends
+        /// 2. For projectile-asteroid collision, score is incremented
+        ///     and projectile and asteroid are added to deletion hashsets
+        /// </summary>
         private void CollisionChecks()
         {
             // For loops to check for collisions between everything
@@ -102,6 +108,11 @@ namespace Asteroids
                 
             }
         }
+        /// <summary>
+        /// Method that goes through deletion hashsets and removes entities from entity dictionaries
+        /// NOTE: Seperate deletion phase to avoid deleting entities during iteration 
+        /// of collision checks
+        /// </summary>
         private void DeletionPhase()
         {
             foreach (string pId in projectileDeletions)
@@ -112,9 +123,14 @@ namespace Asteroids
             {
                 dictAsteroids.Remove(aId);
             }
-
+            // To avoid longer iteration times on subsequent deletion phases
+            projectileDeletions.Clear();
+            asteroidDeletions.Clear();
         }
-        private void UpdateAndDraw()
+        /// <summary>
+        /// Method that updates and draws all relevant entities onto the screen
+        /// </summary>
+        private void UpdateAndDrawPhase()
         {
             playerShip.Update(dt);
             // Check if player can shoot && wants to shoot
@@ -132,7 +148,11 @@ namespace Asteroids
                 p.Draw(window);
             }
         }
-        private void SpawnCheck()
+        /// <summary>
+        /// Method that checks whether it should spawn on asteroid based on the score
+        /// and scale factor. If it should, then it spawns a new asteroid.
+        /// </summary>
+        private void SpawningPhase()
         {
             if (dictAsteroids.Count <= score/SPAWN_SCALE_FACTOR)
             {
@@ -143,13 +163,20 @@ namespace Asteroids
                     Edge randomEdge = (Edge)edgeArray.GetValue(rnd.Next(edgeArray.Length));
                     if (randomEdge != Edge.NULL)
                     {
-                        Asteroid newAsteroid = SpawnAsteroid(window, randomEdge);
+                        Asteroid newAsteroid = SpawnAsteroid(randomEdge);
                         dictAsteroids.Add(newAsteroid.GetId, newAsteroid);
                     };
                 }
             };
         }
-        private Asteroid SpawnAsteroid(Window window,Edge edge)
+        /// <summary>
+        /// Spawns an asteroid with a random position and velocity at the 
+        /// edges of the screen
+        /// </summary>
+        /// <param name="window"></param>
+        /// <param name="edge"></param>
+        /// <returns></returns>
+        private Asteroid SpawnAsteroid(Edge edge)
         {
             // I have to initalize variables?
             float xPos, yPos, xVel, yVel;

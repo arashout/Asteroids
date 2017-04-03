@@ -67,8 +67,6 @@ namespace Asteroids
             jetShape.Position = p;
             jetShape.FillColor = Color.Cyan;
 
-
-
         }
         /// <summary>
         /// Draws the ship and the jet, if the user has recently

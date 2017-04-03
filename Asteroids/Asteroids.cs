@@ -30,8 +30,9 @@ namespace Asteroids
         // The result of floor(score, SPAWN_SCALE_FACTOR) decides how many asteroids are on the screen at once 
         private int score; 
         private const float SPAWN_SCALE_FACTOR = 2;
-        // Texture objects
-        private Texture asteroidTexture;
+        // Text for score board
+        private Text scoreText;
+        private Font font;
 
         public Asteroids(uint width, uint height, string title, Color clrColor) : base(width, height, title, clrColor)
         {
@@ -47,7 +48,10 @@ namespace Asteroids
             brokenParentAsteroids = new HashSet<Asteroid>();
 
             // Assign textures to entities
-            asteroidTexture = new Texture(@"rock.png");
+            font = new Font(@"Roboto-Bold.ttf");
+            scoreText = new Text("Score: 0", font);
+            scoreText.CharacterSize = 30;
+            scoreText.Color = Color.White;
 
         }
 
@@ -59,6 +63,8 @@ namespace Asteroids
 
             projectileDeletions.Clear();
             asteroidDeletions.Clear();
+
+            brokenParentAsteroids.Clear();
 
             score = 0;
             playerShip = null;
@@ -160,6 +166,8 @@ namespace Asteroids
                 p.Update(dt);
                 p.Draw(window);
             }
+            UpdateScore();
+            window.Draw(scoreText);
         }
         /// <summary>
         /// Method that checks whether it should spawn on asteroid based on the score
@@ -252,6 +260,15 @@ namespace Asteroids
             yVel = rnd.Next(-MAX_UNSCALED_ASTEROID_SPEED, MAX_UNSCALED_ASTEROID_SPEED);
             Vector2f v = new Vector2f(xVel, yVel);
             return new Asteroid(pos, v, rnd.Next(MIN_ASTEROID_SIZE, maxRadius));
+        }
+        private void UpdateScore()
+        {
+            scoreText.DisplayedString = "Score: " + score.ToString();
+        }
+
+        public override void Pause()
+        {
+            throw new NotImplementedException();
         }
     }
 }

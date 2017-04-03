@@ -59,6 +59,7 @@ namespace Asteroids
         public abstract void Init();
         public abstract void CleanUp();
         public abstract void Restart();
+        public abstract void Pause();
         public abstract void Update(RenderWindow window, float dt);
     }
 }

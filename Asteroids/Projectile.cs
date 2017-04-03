@@ -20,7 +20,7 @@ namespace Asteroids
 
         public Projectile(Vector2f p, Vector2f v, float direction)
         {
-            id = "P" + count.ToString();
+            this.Id = "P" + count.ToString();
             count++;
             shape = new CircleShape(PROJECTILE_RADIUS);
             shape.Origin = new Vector2f(PROJECTILE_RADIUS, PROJECTILE_RADIUS);

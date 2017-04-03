@@ -11,11 +11,14 @@ namespace Asteroids
         private static long count = 0;
         private float radius;
         private const float BASE_LINE_SPEED = 5;
+        private const float MIN_BREAK_APART_RADIUS = 30;
 
-        public Asteroid(Vector2f p, Vector2f v, Texture t, uint r = 25)
+        public float Radius { get => radius;}
+
+        public Asteroid(Vector2f p, Vector2f v, uint r = 25)
         {
             // ID creation
-            id = "A" + count.ToString();
+            this.Id = "A" + count.ToString();
             count++;
 
             // Getting asteroid speed based on radius
@@ -28,7 +31,7 @@ namespace Asteroids
             shape.Origin = o;
             shape.FillColor = Color.Yellow;
             shape.Position = p;
-            shape.Texture = t;
+            //shape.Texture = t;
         }
         public override void Draw(RenderWindow window)
         {
@@ -83,6 +86,26 @@ namespace Asteroids
             float yDif = shape.Position.Y - proj.GetPostion().Y;
             float sumRadii = radius + proj.Radius;
             return ((xDif * xDif) + (yDif * yDif)) <= (sumRadii * sumRadii);
+        }
+        /// <summary>
+        /// Checks if the asteroid will spawn children when destroyed
+        /// </summary>
+        /// <returns></returns>
+        public bool WillBreakApart()
+        {
+            if(radius > MIN_BREAK_APART_RADIUS)
+            {
+                return true;
+            }
+            return false;
+        }
+        /// <summary>
+        /// Useful for spawning child asteroids
+        /// </summary>
+        /// <returns></returns>
+        public Vector2f GetPosition()
+        {
+            return shape.Position;
         }
     }
 }

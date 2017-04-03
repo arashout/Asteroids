@@ -10,8 +10,8 @@ namespace Asteroids
 {
     class Asteroids : Game
     {
-        // Private variables that essentially 
         private Ship playerShip;
+
         private Dictionary<string, Projectile> dictProjectiles;
         private Dictionary<string, Asteroid> dictAsteroids;
 
@@ -19,17 +19,19 @@ namespace Asteroids
         private HashSet<string> asteroidDeletions;
 
         // Variables relevant to spawning asteroids
+        private HashSet<Asteroid> brokenParentAsteroids;
+
         private Random rnd;
         private Array edgeArray = Enum.GetValues(typeof(Edge));
         private const double SPAWN_CHANCE = .10; // Chance that a asteroid spawns
-        public const int MIN_ASTEROID_SIZE = 25;
+        public const int MIN_ASTEROID_SIZE = 10;
         public const int MAX_ASTEROID_SIZE = 50;
         public const int MAX_UNSCALED_ASTEROID_SPEED = 25;
         // The result of floor(score, SPAWN_SCALE_FACTOR) decides how many asteroids are on the screen at once 
         private int score; 
         private const float SPAWN_SCALE_FACTOR = 2;
         // Texture objects
-        Texture asteroidTexture;
+        private Texture asteroidTexture;
 
         public Asteroids(uint width, uint height, string title, Color clrColor) : base(width, height, title, clrColor)
         {
@@ -41,6 +43,8 @@ namespace Asteroids
 
             projectileDeletions = new HashSet<string>();
             asteroidDeletions = new HashSet<string>();
+
+            brokenParentAsteroids = new HashSet<Asteroid>();
 
             // Assign textures to entities
             asteroidTexture = new Texture(@"rock.png");
@@ -105,11 +109,12 @@ namespace Asteroids
                 foreach (Projectile p in dictProjectiles.Values)
                 {
                     // Add any deletions to deletion sets
-                    if (p.IsExpired) projectileDeletions.Add(p.GetId);
+                    if (p.IsExpired) projectileDeletions.Add(p.Id);
                     else if (a.ShouldExplode(p))
                     {
-                        asteroidDeletions.Add(a.GetId);
-                        projectileDeletions.Add(p.GetId);
+                        asteroidDeletions.Add(a.Id);
+                        projectileDeletions.Add(p.Id);
+                        if (a.WillBreakApart()) brokenParentAsteroids.Add(a);
                         score++;
                     }
                 }
@@ -162,6 +167,17 @@ namespace Asteroids
         /// </summary>
         private void SpawningPhase()
         {
+            foreach(Asteroid a in brokenParentAsteroids)
+            {
+                // Asteroid will break into two smaller asteroids
+                Asteroid a1, a2;
+                a1 = SpawnAsteroid(a.getCenterVertex(),(int) a.Radius/2);
+                a2 = SpawnAsteroid(a.getCenterVertex(), (int)a.Radius / 2);
+                dictAsteroids.Add(a1.Id, a1);
+                dictAsteroids.Add(a2.Id, a2);
+            }
+            brokenParentAsteroids.Clear();
+
             if (dictAsteroids.Count <= score/SPAWN_SCALE_FACTOR)
             {
                 // Random chance to spawn
@@ -172,7 +188,7 @@ namespace Asteroids
                     if (randomEdge != Edge.NULL)
                     {
                         Asteroid newAsteroid = SpawnAsteroid(randomEdge);
-                        dictAsteroids.Add(newAsteroid.GetId, newAsteroid);
+                        dictAsteroids.Add(newAsteroid.Id, newAsteroid);
                     };
                 }
             };
@@ -190,6 +206,7 @@ namespace Asteroids
             float xPos, yPos, xVel, yVel;
             int asteroidRadius;
             xPos = 0; yPos = 0; xVel = 0; yVel = 0;
+            // TODO - Figure out how to clean this up...
             switch (edge)
             {
                 case Edge.LEFT:
@@ -220,7 +237,21 @@ namespace Asteroids
             Vector2f p = new Vector2f(xPos, yPos);
             Vector2f v = new Vector2f(xVel, yVel);
             asteroidRadius = rnd.Next(MIN_ASTEROID_SIZE, MAX_ASTEROID_SIZE);
-            return new Asteroid(p, v, asteroidTexture, (uint) asteroidRadius);
+            return new Asteroid(p, v, (uint) asteroidRadius);
+        }
+        /// <summary>
+        /// Spawns an asteroid with random velocity and random size 
+        /// (Bounded by a given max radius) at a given position
+        /// </summary>
+        /// <param name="pos"></param>
+        /// <returns></returns>
+        private Asteroid SpawnAsteroid(Vector2f pos, int maxRadius)
+        {
+            float xVel, yVel;
+            xVel = rnd.Next(-MAX_UNSCALED_ASTEROID_SPEED, MAX_UNSCALED_ASTEROID_SPEED);
+            yVel = rnd.Next(-MAX_UNSCALED_ASTEROID_SPEED, MAX_UNSCALED_ASTEROID_SPEED);
+            Vector2f v = new Vector2f(xVel, yVel);
+            return new Asteroid(pos, v, (uint) rnd.Next(MIN_ASTEROID_SIZE, maxRadius));
         }
     }
 }

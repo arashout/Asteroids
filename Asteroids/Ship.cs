@@ -132,7 +132,7 @@ namespace Asteroids
         {
             // Impart the ships current position and velocity to projectile
             Projectile p = new Projectile(GetGunPosition(), velocity, shape.Rotation);
-            string key = p.GetId;
+            string key = p.Id;
             dictProjectiles.Add(key, p);
             // Restart counter
             wantsToShoot = false;

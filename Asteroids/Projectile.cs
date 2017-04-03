@@ -9,7 +9,7 @@ namespace Asteroids
     public class Projectile : Entity
     {
         private static int count = 0;
-        private const float PROJECTILE_RADIUS = 5;
+        private const float PROJECTILE_RADIUS = 2;
         private const float BASE_PROJECTILE_SPEED = 10;
         private const float TERMINAL_SPEED = 50;
         private float heading;

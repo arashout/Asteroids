@@ -52,7 +52,9 @@ namespace Asteroids
             shape.Position = p;
             velocity = new Vector2f(0, 0);
 
-            shape.FillColor = Color.White;
+            shape.FillColor = Color.Black;
+            shape.OutlineColor = Color.White;
+            shape.OutlineThickness = -3;
         }
         public override void Draw(RenderWindow window)
         {

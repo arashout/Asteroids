@@ -24,7 +24,7 @@ namespace Asteroids
         private Random rnd;
         private Array edgeArray = Enum.GetValues(typeof(Edge));
         private const double SPAWN_CHANCE = .10; // Chance that a asteroid spawns
-        public const int MIN_ASTEROID_SIZE = 10;
+        public const int MIN_ASTEROID_SIZE = 15;
         public const int MAX_ASTEROID_SIZE = 50;
         public const int MAX_UNSCALED_ASTEROID_SPEED = 25;
         // The result of floor(score, SPAWN_SCALE_FACTOR) decides how many asteroids are on the screen at once 
@@ -237,7 +237,7 @@ namespace Asteroids
             Vector2f p = new Vector2f(xPos, yPos);
             Vector2f v = new Vector2f(xVel, yVel);
             asteroidRadius = rnd.Next(MIN_ASTEROID_SIZE, MAX_ASTEROID_SIZE);
-            return new Asteroid(p, v, (uint) asteroidRadius);
+            return new Asteroid(p, v, asteroidRadius);
         }
         /// <summary>
         /// Spawns an asteroid with random velocity and random size 
@@ -251,7 +251,7 @@ namespace Asteroids
             xVel = rnd.Next(-MAX_UNSCALED_ASTEROID_SPEED, MAX_UNSCALED_ASTEROID_SPEED);
             yVel = rnd.Next(-MAX_UNSCALED_ASTEROID_SPEED, MAX_UNSCALED_ASTEROID_SPEED);
             Vector2f v = new Vector2f(xVel, yVel);
-            return new Asteroid(pos, v, (uint) rnd.Next(MIN_ASTEROID_SIZE, maxRadius));
+            return new Asteroid(pos, v, rnd.Next(MIN_ASTEROID_SIZE, maxRadius));
         }
     }
 }

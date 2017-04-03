@@ -15,7 +15,7 @@ namespace Asteroids
 
         public float Radius { get => radius;}
 
-        public Asteroid(Vector2f p, Vector2f v, uint r = 25)
+        public Asteroid(Vector2f p, Vector2f v, int r)
         {
             // ID creation
             this.Id = "A" + count.ToString();
@@ -29,9 +29,11 @@ namespace Asteroids
             Vector2f o = new Vector2f(radius, radius);
             shape = new CircleShape(radius);
             shape.Origin = o;
-            shape.FillColor = Color.Yellow;
+            // Colours
+            shape.FillColor = Color.Black;
+            shape.OutlineColor = Color.Yellow;
+            shape.OutlineThickness = -2;
             shape.Position = p;
-            //shape.Texture = t;
         }
         public override void Draw(RenderWindow window)
         {

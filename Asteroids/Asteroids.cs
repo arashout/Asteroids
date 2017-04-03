@@ -50,7 +50,7 @@ namespace Asteroids
             // Assign textures to entities
             font = new Font(@"Roboto-Bold.ttf");
             scoreText = new Text("Score: 0", font);
-            scoreText.CharacterSize = 30;
+            scoreText.CharacterSize = FONT_SIZE;
             scoreText.Color = Color.White;
 
         }
@@ -184,6 +184,7 @@ namespace Asteroids
                 dictAsteroids.Add(a1.Id, a1);
                 dictAsteroids.Add(a2.Id, a2);
             }
+            // Reset the hashset since everything has been taken care of
             brokenParentAsteroids.Clear();
 
             if (dictAsteroids.Count <= score/SPAWN_SCALE_FACTOR)
@@ -264,11 +265,6 @@ namespace Asteroids
         private void UpdateScore()
         {
             scoreText.DisplayedString = "Score: " + score.ToString();
-        }
-
-        public override void Pause()
-        {
-            throw new NotImplementedException();
         }
     }
 }

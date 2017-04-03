@@ -32,7 +32,6 @@ namespace Asteroids
         private const float SPAWN_SCALE_FACTOR = 2;
         // Text for score board
         private Text scoreText;
-        private Font font;
 
         public Asteroids(uint width, uint height, string title, Color clrColor) : base(width, height, title, clrColor)
         {
@@ -47,8 +46,7 @@ namespace Asteroids
 
             brokenParentAsteroids = new HashSet<Asteroid>();
 
-            // Assign textures to entities
-            font = new Font(@"Roboto-Bold.ttf");
+            // Setup the score text
             scoreText = new Text("Score: 0", font);
             scoreText.CharacterSize = FONT_SIZE;
             scoreText.Color = Color.White;

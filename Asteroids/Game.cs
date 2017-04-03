@@ -19,8 +19,8 @@ namespace Asteroids
         protected bool isPaused = false;
 
         // Pause Text
-        private Font font;
         private Text pauseText;
+        protected Font font;
         protected const uint FONT_SIZE = 30;
 
         public Game(uint width, uint height, String title, Color clrColor)

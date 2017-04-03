@@ -74,7 +74,7 @@ namespace Asteroids
         {
             // Thrust controls
             if (Keyboard.IsKeyPressed(Keyboard.Key.Up)) Thrust(-1);
-            else if (Keyboard.IsKeyPressed(Keyboard.Key.Down)) Thrust(1);
+
             // Rotation controls
             if (Keyboard.IsKeyPressed(Keyboard.Key.Right)) Rotate(1);
             else if (Keyboard.IsKeyPressed(Keyboard.Key.Left)) Rotate(-1);

@@ -195,11 +195,8 @@ namespace Asteroids
                 {
                     // Get a random edge to spawn Asteroid at
                     Edge randomEdge = (Edge)edgeArray.GetValue(rnd.Next(edgeArray.Length));
-                    if (randomEdge != Edge.NULL)
-                    {
-                        Asteroid newAsteroid = SpawnAsteroid(randomEdge);
-                        dictAsteroids.Add(newAsteroid.Id, newAsteroid);
-                    };
+                    Asteroid newAsteroid = SpawnAsteroid(randomEdge);
+                    dictAsteroids.Add(newAsteroid.Id, newAsteroid);
                 }
             };
         }
@@ -217,31 +214,27 @@ namespace Asteroids
             int asteroidRadius;
             xPos = 0; yPos = 0; xVel = 0; yVel = 0;
             // TODO - Figure out how to clean this up...
+            // Need this switch statment because depending on edge,
+            // we need different coordinates to be outside of edge!
+            xVel = rnd.Next(-MAX_UNSCALED_ASTEROID_SPEED, MAX_UNSCALED_ASTEROID_SPEED);
+            yVel = rnd.Next(-MAX_UNSCALED_ASTEROID_SPEED, MAX_UNSCALED_ASTEROID_SPEED);
             switch (edge)
             {
                 case Edge.LEFT:
                     xPos = 0 - MAX_ASTEROID_SIZE;
                     yPos = rnd.Next(0, (int)window.Size.Y);
-                    xVel = rnd.Next(0, MAX_UNSCALED_ASTEROID_SPEED);
-                    yVel = rnd.Next(-MAX_UNSCALED_ASTEROID_SPEED, MAX_UNSCALED_ASTEROID_SPEED);
                     break;
                 case Edge.RIGHT:
                     xPos = window.Size.X + MAX_ASTEROID_SIZE;
                     yPos = rnd.Next(0, (int)window.Size.Y);
-                    xVel = rnd.Next(-MAX_UNSCALED_ASTEROID_SPEED, 0);
-                    yVel = rnd.Next(-MAX_UNSCALED_ASTEROID_SPEED, MAX_UNSCALED_ASTEROID_SPEED);
                     break;
                 case Edge.UP:
                     xPos = rnd.Next(0, (int)window.Size.X);
                     yPos = 0 - MAX_ASTEROID_SIZE;
-                    xVel = rnd.Next(-MAX_UNSCALED_ASTEROID_SPEED, MAX_UNSCALED_ASTEROID_SPEED);
-                    yVel = rnd.Next(0, MAX_UNSCALED_ASTEROID_SPEED);
                     break;
                 case Edge.DOWN:
                     xPos = rnd.Next(0, (int)window.Size.X);
                     yPos = window.Size.Y + MAX_ASTEROID_SIZE;
-                    xVel = rnd.Next(-MAX_UNSCALED_ASTEROID_SPEED, MAX_UNSCALED_ASTEROID_SPEED);
-                    yVel = rnd.Next(-MAX_UNSCALED_ASTEROID_SPEED, 0);
                     break;
             }
             Vector2f p = new Vector2f(xPos, yPos);

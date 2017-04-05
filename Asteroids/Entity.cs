@@ -8,16 +8,19 @@ namespace Asteroids
     abstract public class Entity
     {
         private string id;
-        //Protected allows child classes to use properties
         protected Shape shape;
         protected Vector2f velocity;
 
         abstract public void Draw(RenderWindow window);
         abstract public void Update(float dt);
-        virtual protected void LoadTexture(Texture t)
-        {
-            shape.Texture = t;
-        }
+        /// <summary>
+        /// Method that returns an edge that the entity exited from
+        /// It uses the halfCharacteristicLength to determine if the
+        /// entity is "fully" out of bounds or not
+        /// </summary>
+        /// <param name="window"></param>
+        /// <param name="halfCharacteristicLength"></param>
+        /// <returns></returns>
         virtual protected Edge OutOfBoundsEdge(Window window, float halfCharacteristicLength)
         {
             if ((shape.Position.X + halfCharacteristicLength) < 0) return Edge.LEFT;
@@ -26,6 +29,14 @@ namespace Asteroids
             else if ((shape.Position.Y - halfCharacteristicLength) > window.Size.Y) return Edge.DOWN;
             else return Edge.NULL;
         }
+        /// <summary>
+        /// Method that resets the entity position depending on the edge they exited from
+        /// Given an edge and a characteristic length it resets the entity at the OPPOSITE edge 
+        /// it left from
+        /// </summary>
+        /// <param name="edge"></param>
+        /// <param name="window"></param>
+        /// <param name="halfCharacteristicLength"></param>
         virtual protected void ResetPosition(Edge edge, Window window, float halfCharacteristicLength)
         {
             if (edge == Edge.LEFT) shape.Position = new Vector2f(window.Size.X + halfCharacteristicLength, shape.Position.Y);

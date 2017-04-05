@@ -6,20 +6,24 @@ namespace Asteroids
     public static class VectorExtension
     {
         /// <summary>
-        /// Computes the magnitude squared of the vector
+        /// 2D definition of a dot product 
+        /// </summary>
+        /// <param name="v"></param>
+        /// <param name="u"></param>
+        /// <returns></returns>
+        public static float DotProduct(this Vector2f v, Vector2f u)
+        {
+            return v.X * u.X + v.Y * u.Y;
+        }
+        /// <summary>
+        /// Returns the magnitude of a vector
         /// </summary>
         /// <param name="v"></param>
         /// <returns></returns>
-        public static float MagnitudeSquared(this Vector2f v)
-        {
-            float mag = v.X * v.X + v.Y * v.Y;
-            return mag;
-        }
-        
         public static float Magnitude(this Vector2f v)
         {
-            double mag = v.X * v.X + v.Y * v.Y;
-            return (float) Math.Sqrt(mag);
+            double dotItself = v.X * v.X + v.Y * v.Y;
+            return (float) Math.Sqrt(dotItself);
         }
     }
 }

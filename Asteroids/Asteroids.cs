@@ -22,22 +22,28 @@ namespace Asteroids
         private HashSet<Asteroid> brokenParentAsteroids;
 
         private Random rnd;
-        private Array edgeArray = Enum.GetValues(typeof(Edge));
-        private const double SPAWN_CHANCE = .10; // Chance that a asteroid spawns
+        // Put edge enum into an array for choosing random edge to spawn from
+        // Need the cast to use helper method SubArray
+        private Edge[] edgeArray = (Edge[])Enum.GetValues(typeof(Edge));
+
+        // Chance that a asteroid spawns
+        private const double SPAWN_CHANCE = .10;
         public const int MIN_ASTEROID_SIZE = 15;
         public const int MAX_ASTEROID_SIZE = 50;
         public const int MAX_UNSCALED_ASTEROID_SPEED = 25;
         // The result of floor(score, SPAWN_SCALE_FACTOR) decides how many asteroids are on the screen at once 
-        private int score; 
+        private int score;
         private const float SPAWN_SCALE_FACTOR = 2;
         // Text for score board
         private Text scoreText;
 
         public Asteroids(uint width, uint height, string title, Color clrColor) : base(width, height, title, clrColor)
         {
+            // Get rid of NULL EDGE!
+            edgeArray = edgeArray.SubArray(0, 4);
+
             // Initialize Random
             rnd = new Random();
-
             dictAsteroids = new Dictionary<string, Asteroid>();
             dictProjectiles = new Dictionary<string, Projectile>();
 
@@ -71,15 +77,11 @@ namespace Asteroids
         public override void Init()
         {
             playerShip = new Ship(new Vector2f(window.Size.X / 2, window.Size.Y / 2), 20);
-
-            Console.WriteLine("Asteroids started!");
         }
 
         public override void Restart()
         {
-            Console.WriteLine("Press enter when you are ready to restart");
-            Console.Out.Flush();
-            Console.ReadLine();
+            isPaused = true;
             CleanUp();
             Init();
         }
@@ -118,11 +120,12 @@ namespace Asteroids
                     {
                         asteroidDeletions.Add(a.Id);
                         projectileDeletions.Add(p.Id);
+                        // Big asteroids will spawn smaller ones when destroyed
                         if (a.WillBreakApart()) brokenParentAsteroids.Add(a);
                         score++;
                     }
                 }
-                
+
             }
         }
         /// <summary>
@@ -173,11 +176,11 @@ namespace Asteroids
         /// </summary>
         private void SpawningPhase()
         {
-            foreach(Asteroid a in brokenParentAsteroids)
+            foreach (Asteroid a in brokenParentAsteroids)
             {
                 // Asteroid will break into two smaller asteroids
                 Asteroid a1, a2;
-                a1 = SpawnAsteroid(a.getCenterVertex(),(int) a.Radius/2);
+                a1 = SpawnAsteroid(a.getCenterVertex(), (int)a.Radius / 2);
                 a2 = SpawnAsteroid(a.getCenterVertex(), (int)a.Radius / 2);
                 dictAsteroids.Add(a1.Id, a1);
                 dictAsteroids.Add(a2.Id, a2);
@@ -185,10 +188,10 @@ namespace Asteroids
             // Reset the hashset since everything has been taken care of
             brokenParentAsteroids.Clear();
 
-            if (dictAsteroids.Count <= score/SPAWN_SCALE_FACTOR)
+            if (dictAsteroids.Count <= score / SPAWN_SCALE_FACTOR)
             {
                 // Random chance to spawn
-                if(rnd.NextDouble() < SPAWN_CHANCE)
+                if (rnd.NextDouble() < SPAWN_CHANCE)
                 {
                     // Get a random edge to spawn Asteroid at
                     Edge randomEdge = (Edge)edgeArray.GetValue(rnd.Next(edgeArray.Length));
@@ -218,24 +221,24 @@ namespace Asteroids
             {
                 case Edge.LEFT:
                     xPos = 0 - MAX_ASTEROID_SIZE;
-                    yPos = rnd.Next(0, (int) window.Size.Y);
+                    yPos = rnd.Next(0, (int)window.Size.Y);
                     xVel = rnd.Next(0, MAX_UNSCALED_ASTEROID_SPEED);
                     yVel = rnd.Next(-MAX_UNSCALED_ASTEROID_SPEED, MAX_UNSCALED_ASTEROID_SPEED);
                     break;
                 case Edge.RIGHT:
                     xPos = window.Size.X + MAX_ASTEROID_SIZE;
-                    yPos = rnd.Next(0, (int) window.Size.Y);
+                    yPos = rnd.Next(0, (int)window.Size.Y);
                     xVel = rnd.Next(-MAX_UNSCALED_ASTEROID_SPEED, 0);
                     yVel = rnd.Next(-MAX_UNSCALED_ASTEROID_SPEED, MAX_UNSCALED_ASTEROID_SPEED);
                     break;
                 case Edge.UP:
-                    xPos = rnd.Next(0, (int) window.Size.X);
+                    xPos = rnd.Next(0, (int)window.Size.X);
                     yPos = 0 - MAX_ASTEROID_SIZE;
                     xVel = rnd.Next(-MAX_UNSCALED_ASTEROID_SPEED, MAX_UNSCALED_ASTEROID_SPEED);
                     yVel = rnd.Next(0, MAX_UNSCALED_ASTEROID_SPEED);
                     break;
                 case Edge.DOWN:
-                    xPos = rnd.Next(0, (int) window.Size.X);
+                    xPos = rnd.Next(0, (int)window.Size.X);
                     yPos = window.Size.Y + MAX_ASTEROID_SIZE;
                     xVel = rnd.Next(-MAX_UNSCALED_ASTEROID_SPEED, MAX_UNSCALED_ASTEROID_SPEED);
                     yVel = rnd.Next(-MAX_UNSCALED_ASTEROID_SPEED, 0);

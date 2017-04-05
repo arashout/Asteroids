@@ -8,12 +8,14 @@ namespace Asteroids
 {
     class Asteroid : Entity
     {
+        // Static variable for unique ID creation
         private static long count = 0;
+
         private float radius;
         private const float BASE_LINE_SPEED = 5;
         private const float MIN_BREAK_APART_RADIUS = 30;
 
-        public float Radius { get => radius;}
+        public float Radius { get => radius; }
 
         public Asteroid(Vector2f p, Vector2f v, int r)
         {
@@ -24,7 +26,7 @@ namespace Asteroids
             // Getting asteroid speed based on radius
             radius = r;
             // Bigger asteroids should move slower
-            velocity = v/radius + v/v.Magnitude() * BASE_LINE_SPEED ;
+            velocity = v / radius + v / v.Magnitude() * BASE_LINE_SPEED;
 
             Vector2f o = new Vector2f(radius, radius);
             shape = new CircleShape(radius);
@@ -71,7 +73,7 @@ namespace Asteroids
             foreach (Vector2f p in shipVertices)
             {
                 c = p - shape.Position;
-                if (c.MagnitudeSquared() <= (radius * radius) ) return true;
+                if (c.DotProduct(c) <= (radius * radius)) return true;
             }
             return false;
         }
@@ -95,7 +97,7 @@ namespace Asteroids
         /// <returns></returns>
         public bool WillBreakApart()
         {
-            if(radius > MIN_BREAK_APART_RADIUS)
+            if (radius > MIN_BREAK_APART_RADIUS)
             {
                 return true;
             }

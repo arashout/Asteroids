@@ -26,23 +26,27 @@ namespace Asteroids
         private bool isShotCharged = false;
         private bool wantsToShoot = false; // This variable is checked in the game loop
         private Byte shotCounter;
-        private const Byte shotChargingTime = 5; //Amount of frames to be wait before shot is charged
+        private const Byte shotChargingTime = 10; //Amount of frames to be wait before shot is charged
+
+        // For drawing thrust jet
+        private Shape jetShape;
+        private const float THRUSTER_ROTATION_OFFSET = 180;
+
+        // The parameters below are mostly personal perference on how the ship moves
 
         // How much to increase velocity by when key is pressed
         private const float rotationPower = 30;
         private const float thrustPower = 30;
 
         // Keeping the spaceship velocities reasonable
-        private const float terminalVelocitySquared = 300*300; // To avoid SQRT
+        private const float terminalVelocity = 300;
         private const float decayRate = .9f;
         private const float angularDecayRate = .7f;
 
         // Note that shape.Rotation acts as angular position
         private float angularVelocity;
 
-        // For drawing thrust jet
-        private Shape jetShape;
-        private const float THRUSTER_ROTATION_OFFSET = 180;
+
 
         public Ship(Vector2f p, float sideLength)
         {
@@ -63,6 +67,8 @@ namespace Asteroids
             jetShape = new CircleShape(sideLength / 2, 3);
             jetShape.Scale = new Vector2f(0.6f, 1);
             jetShape.Origin = new Vector2f(sideLength / 2, sideLength / 1.5f);
+            // Thruster has to rotated 180 degrees, so that it is facing opposite 
+            // direction of ship
             jetShape.Rotation = shape.Rotation + THRUSTER_ROTATION_OFFSET;
             jetShape.Position = p;
             jetShape.FillColor = Color.Cyan;
@@ -75,8 +81,8 @@ namespace Asteroids
         /// <param name="window"></param>
         public override void Draw(RenderWindow window)
         {
-            Edge curEdge = OutOfBoundsEdge(window, shipLength/2);
-            if (curEdge != Edge.NULL) ResetPosition(curEdge, window, shipLength/2);
+            Edge curEdge = OutOfBoundsEdge(window, shipLength / 2);
+            if (curEdge != Edge.NULL) ResetPosition(curEdge, window, shipLength / 2);
             // Because keyboard repeating rate < frame rate , you get flickering of jet
             // Possibly implement a counter to fix this? (Not that important...)
             if (hasThrust) window.Draw(jetShape);
@@ -86,7 +92,7 @@ namespace Asteroids
             hasThrust = false;
             hasSpin = false;
         }
-        
+
 
         /// <summary>
         /// The ship update function applies thrust & rotation if applicable
@@ -121,12 +127,12 @@ namespace Asteroids
         public void Thrust(sbyte direction)
         {
             // NOTE: The reason for the orientation of sin and cos is because shape.Rotation is 0 deg at "90 degrees"
-            // Essentially phase shifted by 90 degrees - SUJECT TO CHANGE
+            // Essentially phase shifted by 90 degrees
             float headingRads = shape.Rotation.degToRads();
-            float xComponent = (float) Math.Sin(headingRads) * thrustPower * direction;
-            float yComponent = (float) Math.Cos(headingRads) * thrustPower * direction;
+            float xComponent = (float)Math.Sin(headingRads) * thrustPower * direction;
+            float yComponent = (float)Math.Cos(headingRads) * thrustPower * direction;
 
-            if (velocity.MagnitudeSquared() < terminalVelocitySquared)
+            if (velocity.Magnitude() < terminalVelocity)
             {
                 velocity = new Vector2f(velocity.X - xComponent, velocity.Y + yComponent);
                 hasThrust = true;
@@ -174,7 +180,7 @@ namespace Asteroids
         public List<Vector2f> GetVertices()
         {
             List<Vector2f> points = new List<Vector2f> { };
-            for(Byte i = 0; i < shape.GetPointCount(); i++)
+            for (Byte i = 0; i < shape.GetPointCount(); i++)
             {
                 // Found this on SFML-dev.org
                 // Note: That GetPoint gives you only vertices from point of 

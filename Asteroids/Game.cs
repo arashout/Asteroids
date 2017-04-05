@@ -13,13 +13,13 @@ namespace Asteroids
         protected RenderWindow window;
         protected Color clearColor;
 
-        // Timing 
+        // Timing variables
         protected const uint FRAMERATE = 30;
         protected float dt = 1.0f / FRAMERATE;
         protected bool isPaused = false;
 
-        // Pause Text
-        private Text pauseText;
+        // Main menu text, and default font settings
+        protected Text menuText;
         protected Font font;
         protected const uint FONT_SIZE = 30;
 
@@ -37,18 +37,19 @@ namespace Asteroids
             window.Closed += Window_Closed;
             window.KeyPressed += Window_KeyPressed;
 
-            // Font for pause menu text
+            // Font for menu text
             font = new Font(@"Roboto-Bold.ttf");
-            pauseText = new Text("Game Paused", font);
-            pauseText.CharacterSize = FONT_SIZE;
-            pauseText.Color = Color.White;
+            menuText = new Text("Game Paused", font); // This will be the default text
+            menuText.CharacterSize = FONT_SIZE;
+            menuText.Color = Color.White;
             // Approximately center based on font size
-            pauseText.Position = new Vector2f(window.Size.X/2 - FONT_SIZE*3, window.Size.Y/2 - FONT_SIZE*2);
+            menuText.Position = new Vector2f(window.Size.X / 2 - FONT_SIZE * 3, window.Size.Y / 2 - FONT_SIZE * 2);
         }
 
         private void Window_KeyPressed(object sender, KeyEventArgs e)
         {
-            if ((e.Code == Keyboard.Key.P)){
+            if ((e.Code == Keyboard.Key.Escape))
+            {
                 if (!isPaused)
                 {
                     isPaused = true;
@@ -78,7 +79,7 @@ namespace Asteroids
                 window.Clear(clearColor);
 
                 // Update the game if player hasn't paused
-                if(isPaused) window.Draw(pauseText);
+                if (isPaused) window.Draw(menuText);
                 else Update(window, dt);
                 // Update the window
                 window.Display();
@@ -90,6 +91,15 @@ namespace Asteroids
         public abstract void Init();
         public abstract void CleanUp();
         public abstract void Restart();
+        /// <summary>
+        /// This is where the game logic happens
+        /// Window is passed so that we can draw shapes
+        /// And dt is passed for calculating kinematics (movement)
+        /// Note: for smooth movement key presses are taken care of in here
+        /// instead of using events
+        /// </summary>
+        /// <param name="window"></param>
+        /// <param name="dt"></param>
         public abstract void Update(RenderWindow window, float dt);
     }
 }

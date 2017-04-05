@@ -59,9 +59,9 @@
   <ItemGroup>
     <Compile Include="Asteroid.cs" />
     <Compile Include="Asteroids.cs" />
-    <Compile Include="CollisionHelper.cs" />
     <Compile Include="Entity.cs" />
     <Compile Include="Game.cs" />
+    <Compile Include="Helper.cs" />
     <Compile Include="MathExtension.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Projectile.cs" />
@@ -98,9 +98,6 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="OpenTK.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="rock.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

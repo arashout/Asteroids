@@ -5,6 +5,11 @@ using System.Collections.Generic;
 
 namespace Asteroids
 {
+    /// <summary>
+    /// Any object on the screen besides the score text, is a child 
+    /// of the Entity abstract class. The reason for this is that 
+    /// they all share pretty much every method in this class
+    /// </summary>
     abstract public class Entity
     {
         private string id;

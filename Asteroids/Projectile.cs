@@ -6,6 +6,15 @@ using SFML.Window;
 
 namespace Asteroids
 {
+    /// <summary>
+    /// A projectile class for the bullets that ship shoots
+    /// Pretty simple class, pretty much just a ball moving with
+    /// a constant velocity in space
+    /// The main ideas are that
+    /// 1. The projectile moves with a base speed PLUS a velocity imparted by the ship
+    /// 2. It expires after a certain amount of frames or if it leaves the screen
+    ///     2a. Once expired it will be deleted on next game loop iteration
+    /// </summary>
     public class Projectile : Entity
     {
         private const float PROJECTILE_RADIUS = 2;
@@ -19,16 +28,12 @@ namespace Asteroids
         private const Byte MAX_LIFETIME_FRAMES = 30;
 
         // Static variable for unique ID creation
-        private static int count = 0;
-        // Since projectiles expire after a certain amount of time
-        // We can reset our counter and not worry about collisions in HASHSET
-        private const int COUNT_RESET_LIMIT = 10*MAX_LIFETIME_FRAMES;
+        private static long count = 0;
 
         public Projectile(Vector2f p, Vector2f v, float direction)
         {
             this.Id = "P" + count.ToString();
             count++;
-            if (count > COUNT_RESET_LIMIT) count = 0;
 
             shape = new CircleShape(PROJECTILE_RADIUS);
             shape.Origin = new Vector2f(PROJECTILE_RADIUS, PROJECTILE_RADIUS);

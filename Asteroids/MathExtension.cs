@@ -1,8 +1,11 @@
 ﻿using System;
-using SFML.System;
 
 namespace Asteroids
 {
+    /// <summary>
+    /// Point of this class is to add any common math functions
+    /// that aren't in the math class
+    /// </summary>
     public static class MathExtension
     {
         /// <summary>

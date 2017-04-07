@@ -3,6 +3,10 @@ using System;
 
 namespace Asteroids
 {
+    /// <summary>
+    /// Point of this class is to provide vector operations
+    /// that SFML.Net doesn't provide
+    /// </summary>
     public static class VectorExtension
     {
         /// <summary>

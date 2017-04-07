@@ -8,10 +8,11 @@ namespace Asteroids
 {
     /// <summary>
     /// Class for the ship that the player will be controlling.
-    /// All ships are initialized with zero velocity
-    /// Args:
-    ///     p(Vector2f) : the position that the ship is starting at
-    ///     sideLength(float) : The side length of the triangle that makes up the ship
+    /// Movement of the ship and shooting of projectiles is taken 
+    /// care of in this class. However, this class only contains
+    /// information about if the players wants to shoot, how to shoot,
+    /// and if it is possible to shoot. The final trigger is taken care
+    /// of in the game loop
     /// </summary> 
     class Ship : Entity
     {
@@ -47,7 +48,11 @@ namespace Asteroids
         private float angularVelocity;
 
 
-
+        /// <summary>
+        /// Note that ships start with zero velocity
+        /// </summary>
+        /// <param name="p"></param>
+        /// <param name="sideLength"></param>
         public Ship(Vector2f p, float sideLength)
         {
             // Drawing ship
@@ -83,12 +88,12 @@ namespace Asteroids
         {
             Edge curEdge = OutOfBoundsEdge(window, shipLength / 2);
             if (curEdge != Edge.NULL) ResetPosition(curEdge, window, shipLength / 2);
-            // Because keyboard repeating rate < frame rate , you get flickering of jet
-            // Possibly implement a counter to fix this? (Not that important...)
+            // TODO : Fix jet flickering, ruled out keyboard repeat (not sure what the issue is)
             if (hasThrust) window.Draw(jetShape);
             window.Draw(shape);
 
-            // Reset these here so I know when to draw jet
+            // These are resetted after drawing the jet
+            // Otherwise the jet would never be drawn
             hasThrust = false;
             hasSpin = false;
         }
@@ -195,13 +200,22 @@ namespace Asteroids
             else shotCounter++;
             wantsToShoot = false;
         }
+        /// <summary>
+        /// Returns the tip of the isoceles triangle that is the ship
+        /// Which is where I want projectiles to fire from
+        /// </summary>
+        /// <returns></returns>
         private Vector2f GetGunPosition()
         {
-            // This is the tip of the isoceles triangle that is the ship
             // I'm honestly not quite sure why I have to jump through so many
             // hoops to get absolute coordinates... But here we are.
             return shape.Transform.TransformPoint(shape.GetPoint(3));
         }
+        /// <summary>
+        /// Returns the position between the two "back" vertices of the ship
+        /// This is where the jet from the thruster will be
+        /// </summary>
+        /// <returns></returns>
         private Vector2f GetThrusterPostion()
         {
             Vector2f p1 = shape.Transform.TransformPoint(shape.GetPoint(1));

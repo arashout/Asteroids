@@ -6,6 +6,7 @@ using SFML.Graphics;
 namespace Asteroids
 {
     // To determine out of bounds edge
+    // NULL edge represents inside of screen
     public enum Edge { UP, DOWN, LEFT, RIGHT, NULL }
 
     abstract class Game

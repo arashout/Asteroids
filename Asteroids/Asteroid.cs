@@ -1,11 +1,21 @@
-﻿using System;
-using SFML.System;
-using SFML.Window;
+﻿using SFML.System;
 using SFML.Graphics;
 using System.Collections.Generic;
 
 namespace Asteroids
 {
+    /// <summary>
+    /// The asteroid class in our asteroids game
+    /// Asteroids are represented by plain circles, textures haven't been added
+    /// KEY IDEAS:
+    /// 1. In general bigger asteroids move slower than smaller ones
+    ///     1a. Thus why speed is inversely proportional to radius
+    ///     1b. I didn't want situations where the asteroids moves very slowly
+    ///         or doesn't move at all due to random generation so I also add
+    ///         a base line speed
+    /// 2. Collision checks with projectiles and the ship are taken care of with
+    ///    this class (arbitrary decision)
+    /// </summary>
     class Asteroid : Entity
     {
         // Static variable for unique ID creation
@@ -86,10 +96,9 @@ namespace Asteroids
         {
             // Circle Circle Collision check
             // The distance between centers is less than sum of radii
-            float xDif = shape.Position.X - proj.GetPostion().X;
-            float yDif = shape.Position.Y - proj.GetPostion().Y;
+            Vector2f difference = new Vector2f(shape.Position.X - proj.GetPostion().X, shape.Position.Y - proj.GetPostion().Y);
             float sumRadii = radius + proj.Radius;
-            return ((xDif * xDif) + (yDif * yDif)) <= (sumRadii * sumRadii);
+            return difference.Magnitude() <= sumRadii;
         }
         /// <summary>
         /// Checks if the asteroid will spawn children when destroyed

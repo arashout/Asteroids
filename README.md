@@ -2,8 +2,7 @@
 This is a retro Asteroids Clone that I built to learn C# in a fun way.  
 I used the awesome SFML graphics library with it's C# bindings.
 
-Here's a quick video of it in action:
-https://www.youtube.com/watch?v=karFnycGjbY&t=9s
+[Here's a quick video of it in action:](https://www.youtube.com/watch?v=karFnycGjbY)
 
 ## Key Ideas
 

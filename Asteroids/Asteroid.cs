@@ -1,4 +1,4 @@
-﻿using SFML.System;
+using SFML.System;
 using SFML.Graphics;
 using System.Collections.Generic;
 
@@ -25,7 +25,12 @@ namespace Asteroids
         private const float BASE_LINE_SPEED = 5;
         private const float MIN_BREAK_APART_RADIUS = 30;
 
-        public float Radius { get => radius; }
+        public float Radius {
+            get
+            {
+                return radius;
+            }
+        }
 
         public Asteroid(Vector2f p, Vector2f v, int r)
         {

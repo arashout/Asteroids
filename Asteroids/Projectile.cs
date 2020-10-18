@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using SFML.System;
 using SFML.Graphics;
 using System;

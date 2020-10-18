@@ -1,4 +1,4 @@
-﻿using SFML.System;
+using SFML.System;
 using SFML.Window;
 using SFML.Graphics;
 using System.Collections.Generic;
@@ -49,6 +49,15 @@ namespace Asteroids
             else if (edge == Edge.UP) shape.Position = new Vector2f(shape.Position.X, window.Size.Y + halfCharacteristicLength);
             else shape.Position = new Vector2f(shape.Position.X, -halfCharacteristicLength);
         }
-        public string Id { get => id; set => id = value; }
+        public string Id {
+            get
+            {
+                return id;
+            }
+            set
+            {
+                id = value;
+            }   
+        }
     }
 }

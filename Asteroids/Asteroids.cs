@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using SFML.System;
 using SFML.Graphics;
@@ -62,7 +62,6 @@ namespace Asteroids
             // Setup the score text
             scoreText = new Text("Score: 0", font);
             scoreText.CharacterSize = FONT_SIZE;
-            scoreText.Color = Color.White;
 
         }
 

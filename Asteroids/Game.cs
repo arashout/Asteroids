@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using SFML.System;
 using SFML.Window;
 using SFML.Graphics;
@@ -42,7 +42,7 @@ namespace Asteroids
             font = new Font(@"Roboto-Bold.ttf");
             menuText = new Text("Game Paused", font); // This will be the default text
             menuText.CharacterSize = FONT_SIZE;
-            menuText.Color = Color.White;
+
             // Approximately center based on font size
             menuText.Position = new Vector2f(window.Size.X / 2 - FONT_SIZE * 3, window.Size.Y / 2 - FONT_SIZE * 2);
         }

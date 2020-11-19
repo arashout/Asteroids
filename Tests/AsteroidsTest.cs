@@ -113,13 +113,57 @@ namespace Tests
         [TestMethod]
         public void DeletionPhaseTest()
         {
-            throw new NotImplementedException();
+            MockData();
+
+            var game = new PrivateObject(_game);
+
+            var asteroidDeletions = (HashSet<string>)game.GetField("asteroidDeletions");
+            var asteroids = (Dictionary<string, Asteroid>)game.GetField("dictAsteroids");
+            var projectileDeletions = (HashSet<string>)game.GetField("projectileDeletions");
+            var projectiles = (Dictionary<string, Projectile>)game.GetField("dictProjectiles");
+
+            Assert.IsTrue(
+                asteroidDeletions.Count == 0 && projectileDeletions.Count == 0,
+                "Failed to initialize data."
+            );
+
+            foreach (var asteroidId in asteroids.Keys)
+            {
+                asteroidDeletions.Add(asteroidId);
+            }
+
+            foreach (var projectileId in projectiles.Keys)
+            {
+                projectileDeletions.Add(projectileId);
+            }
+
+            Assert.IsTrue(
+                asteroidDeletions.Count > 0 && projectileDeletions.Count > 0,
+                "Failed to initialize data."
+            );
+
+            game.Invoke("DeletionPhase");
+
+            Assert.IsTrue(
+                asteroidDeletions.Count == 0 && asteroids.Count == 0 && projectileDeletions.Count == 0 && projectiles.Count == 0,
+                "Failed to delete elements."
+            );
         }
 
         [TestMethod]
         public void InitTest()
         {
-            throw new NotImplementedException();
+            var game = new PrivateObject(_game);
+
+            var player = (Ship)game.GetField("playerShip");
+
+            Assert.IsNull(player, "Failed to initalize data.");
+
+            _game.Init();
+
+            player = (Ship)game.GetField("playerShip");
+
+            Assert.IsNotNull(player, "Failed to initialize game.");
         }
 
         [TestMethod]

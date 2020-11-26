@@ -184,22 +184,84 @@ namespace Tests
         [DataRow(Edge.UP)]
         [DataRow(Edge.DOWN)]
         [DataRow(Edge.NULL)]
-        public void SpawnAsteroidTest(Edge edge)
+        public void SpawnAsteroidEdgeTest(Edge edge)
         {
-            throw new NotImplementedException();
+            var game = new PrivateObject(_game);
+
+            var window = (RenderWindow)game.GetField("window");
+
+            var asteroid = (Asteroid)game.Invoke("SpawnAsteroid", edge);
+
+            var shape = asteroid is object ? (Shape)new PrivateObject(asteroid).GetField("shape") : default;
+
+            if (edge != Edge.NULL)
+            {
+                Assert.IsNotNull(asteroid);
+            }
+
+            switch (edge)
+            {
+                case Edge.LEFT:
+                    Assert.IsTrue(shape.Position.X == -Asteroids.Asteroids.MAX_ASTEROID_SIZE);
+
+                    break;
+                case Edge.RIGHT:
+                    Assert.IsTrue(shape.Position.X == window.Size.X + Asteroids.Asteroids.MAX_ASTEROID_SIZE);
+
+                    break;
+                case Edge.UP:
+                    Assert.IsTrue(shape.Position.Y == -Asteroids.Asteroids.MAX_ASTEROID_SIZE);
+
+                    break;
+                case Edge.DOWN:
+                    Assert.IsTrue(shape.Position.Y == window.Size.Y + Asteroids.Asteroids.MAX_ASTEROID_SIZE);
+
+                    break;
+                case Edge.NULL:
+                    Assert.IsTrue(asteroid is null || shape.Position.X == 0 && shape.Position.Y == 0);
+
+                    break;
+                default:
+                    throw new NotSupportedException($"Edge type {edge} is not supported for testing.");
+            }
         }
 
-        [TestMethod]
-        public void SpawnAsteroidTest(Vector2f pos, int maxRadius)
+        [DataTestMethod]
+        [DataRow(0f,    40f,    10)]
+        [DataRow(10f,   30f,    15)]
+        [DataRow(20f,   20f,    25)]
+        [DataRow(30f,   10f,    40)]
+        [DataRow(40f,   0f,     67)]
+        public void SpawnAsteroidPositionTest(float x, float y, int maxRadius)
         {
-            // TODO: for loop to test the other spawnAsteroid method
-            throw new NotImplementedException();
+            var game = new PrivateObject(_game);
+
+            if (Asteroids.Asteroids.MIN_ASTEROID_SIZE > maxRadius)
+            {
+                Assert.ThrowsException<ArgumentOutOfRangeException>(() => game.Invoke("SpawnAsteroid", new Vector2f(x, y), maxRadius));
+            }
+            else
+            {
+                Assert.IsNotNull(game.Invoke("SpawnAsteroid", new Vector2f(x, y), maxRadius));
+            }
         }
 
         [TestMethod]
         public void SpawningPhaseTest()
         {
-            throw new NotImplementedException();
+            var game = new PrivateObject(_game);
+
+            var brokenParentAsteroids = (HashSet<Asteroid>)game.GetField("brokenParentAsteroids");
+            var dictAsteroids = (Dictionary<string, Asteroid>)game.GetField("dictAsteroids");
+
+            Assert.IsTrue(brokenParentAsteroids is object && brokenParentAsteroids.Count == 0);
+            Assert.IsTrue(dictAsteroids is object && dictAsteroids.Count == 0);
+
+            brokenParentAsteroids.Add((Asteroid)game.Invoke("SpawnAsteroid", Edge.LEFT));
+
+            game.Invoke("SpawningPhase");
+
+            Assert.IsTrue(dictAsteroids.Count > 0);
         }
 
         [TestMethod]
